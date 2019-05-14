@@ -51,6 +51,7 @@ namespace KillerAppS2
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            //app.UseSession();
 
             app.UseMvc(routes =>
             {

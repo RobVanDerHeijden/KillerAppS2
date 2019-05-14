@@ -1,0 +1,105 @@
+﻿@model Model.Gang
+
+@{
+    ViewData["Title"] = "DetailsGang";
+}
+
+<h2>DetailsGang</h2>
+
+<div>
+    <h4>Gang</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.GangId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.GangId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Tag)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Tag)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Money)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Money)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Income)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Income)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DateFounded)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DateFounded)
+        </dd>
+    </dl>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                @* TODO: ID weghalen *@
+                <th>
+                    PlayerId
+                </th>
+                <th>
+                    Username
+                </th>
+                <th>
+                    PlayerLevel
+                </th>
+                <th>
+                    Experience
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var player in Model.Players)
+            {
+            <tr>
+                @* TODO: ID weghalen *@
+                <td>
+                    @Html.DisplayFor(modelItem => player.PlayerId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => player.Username)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => player.PlayerLevel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => player.Experience)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditPlayer", new { id = player.PlayerId }) |
+                    @Html.ActionLink("Details", "DetailsPlayer", new { id = player.PlayerId }) |
+                    @Html.ActionLink("Delete", "DeletePlayer", new { id = player.PlayerId })
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div>
+    @Html.ActionLink("Edit", "EditGang", new { id = Model.GangId }) |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -33,6 +33,16 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    <li><a asp-area="" asp-controller="Player" asp-action="Index">Player</a></li>
+                    <li><a asp-area="" asp-controller="Gang" asp-action="Index">Gang</a></li>
+                    @if (true)
+                    {
+                        <li><a asp-area="" asp-controller="Player" asp-action="Logout">logout</a></li>
+                    }
+                    else
+                    {
+                        <li><a asp-area="" asp-controller="Player" asp-action="Login">login</a></li>
+                    }
                 </ul>
             </div>
         </div>
