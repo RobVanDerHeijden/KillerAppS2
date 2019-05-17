@@ -23,9 +23,13 @@ namespace Logic
             _gangRepo.AddPlayerToGang(playerId, gangId);
         }
 
-        public void RemoverPlayerFromGang(int playerId, int gangId)
+        public void RemovePlayerFromGang(int playerId, int gangId)
         {
             _gangRepo.RemovePlayerFromGang(playerId, gangId);
+        }
+        public void RemovePlayerFromGang(int playerId)
+        {
+            _gangRepo.RemovePlayerFromGang(playerId);
         }
 
         public List<Player> GetPlayersWithoutGang()

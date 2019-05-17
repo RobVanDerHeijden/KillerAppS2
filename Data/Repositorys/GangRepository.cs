@@ -30,8 +30,11 @@ namespace Data.Repositorys
         }
         public void RemovePlayerFromGang(int playerId, int gangId)
         {
-            // TODO: fix parameters
             _igangContext.RemovePlayerFromGang(playerId, gangId);
+        }
+        public void RemovePlayerFromGang(int playerId)
+        {
+            _igangContext.RemovePlayerFromGang(playerId);
         }
 
         public List<Player> GetPlayersWithoutGang()

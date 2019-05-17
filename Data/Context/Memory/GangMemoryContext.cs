@@ -87,6 +87,11 @@ namespace Data.Context
             //correctGang.Players.Remove()
         }
 
+        public void RemovePlayerFromGang(int playerId)
+        {
+            throw new NotImplementedException();
+        }
+
         // TODO: Kijk of ik deze in de Gang of Player wil
         public List<Player> GetPlayersWithoutGang()
         {

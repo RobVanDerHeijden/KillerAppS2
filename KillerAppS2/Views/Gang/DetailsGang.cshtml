@@ -5,7 +5,9 @@
 }
 
 <h2>DetailsGang</h2>
-
+<p>
+    <a asp-action="InvitePlayer">Create New</a>
+</p>
 <div>
     <h4>Gang</h4>
     <hr />
@@ -90,9 +92,9 @@
                     @Html.DisplayFor(modelItem => player.Experience)
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "EditPlayer", new { id = player.PlayerId }) |
+                    @Html.ActionLink("Edit", "EditPlayerGangRole", new { id = player.PlayerId }) |
                     @Html.ActionLink("Details", "DetailsPlayer", new { id = player.PlayerId }) |
-                    @Html.ActionLink("Delete", "DeletePlayer", new { id = player.PlayerId })
+                    @Html.ActionLink("Remove", "RemovePlayerFromGang", new { id = player.PlayerId })
                 </td>
             </tr>
             }

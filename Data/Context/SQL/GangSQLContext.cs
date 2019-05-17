@@ -10,14 +10,14 @@ namespace Data.Context.SQL
 {
     class GangSqlContext : IGangContext
     {
-        private DBConnection dbConnection = new DBConnection();
+        private readonly DBConnection _dbConnection = new DBConnection();
 
         public List<Gang> GetGangs()
         {
             List<Gang> gangs = new List<Gang>();
             try
             {
-                using (SqlConnection conn = dbConnection.GetConnString())
+                using (SqlConnection conn = _dbConnection.GetConnString())
                 {
                     conn.Open();
                     using (SqlCommand gangCmd = new SqlCommand("SELECT * FROM [dbo].[Gang];", conn))
@@ -46,9 +46,9 @@ namespace Data.Context.SQL
                 throw;
             }
 
-            foreach (Gang currentgang in gangs)
+            foreach (Gang currentGang in gangs)
             {
-                currentgang.Players = GetPlayersInGang(currentgang.GangId);
+                currentGang.Players = GetPlayersInGang(currentGang.GangId);
             }
             return gangs;
         }
@@ -58,11 +58,10 @@ namespace Data.Context.SQL
             try
             {
                 List<Player> playerList = new List<Player>();
-                using (SqlConnection conn = dbConnection.GetConnString())
+                using (SqlConnection conn = _dbConnection.GetConnString())
                 {
                     conn.Open();
                     using (SqlCommand gangMemberCmd = 
-                            //new SqlCommand("SELECT * FROM[dbo].[Player]", con))
                         new SqlCommand("SELECT P.* " +
                                        "FROM [dbo].[Player] P " +
                                        "INNER JOIN [dbo].[GangMember] GM ON GM.PlayerID = P.PlayerID " +
@@ -104,12 +103,79 @@ namespace Data.Context.SQL
 
         public void AddPlayerToGang(int playerId, int gangId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    // TODO: FIX DEZE STUFF
+                    using (SqlCommand cmd = new SqlCommand("INSERT INTO ", conn))
+                    {
+                        
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
+        // TODO: Check if player is last player: if yes-> also delete Gang
         public void RemovePlayerFromGang(int playerId, int gangId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+                    using (SqlCommand cmdGangMember = new SqlCommand("DELETE FROM [dbo].[GangMember] WHERE GangId = @GangId AND PlayerId = @PlayerId", conn))
+                    {
+                        cmdGangMember.Parameters.AddWithValue("@GangId", gangId);
+                        cmdGangMember.Parameters.AddWithValue("@PlayerId", playerId);
+                        
+                        cmdGangMember.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        // TODO: Check if player is last player: if yes-> also delete Gang
+        // TODO: opschonen: player kan maar in een gang zitten dus heb geen WHERE condition voor GangId nodig(oftewel alleen delete from GM where playerid)
+        public void RemovePlayerFromGang(int playerId)
+        {
+            try
+            {
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+                    int gangId;
+                    using (SqlCommand cmdPlayerWhatGang = new SqlCommand("SELECT GangId FROM [dbo].[GangMember] WHERE PlayerId = @PlayerId", conn))
+                    {
+                        cmdPlayerWhatGang.Parameters.AddWithValue("@PlayerId", playerId);
+                        gangId = (int) cmdPlayerWhatGang.ExecuteScalar();
+                    }
+
+
+                    using (SqlCommand cmdGangMember = new SqlCommand("DELETE FROM [dbo].[GangMember] WHERE GangId = @GangId AND PlayerId = @PlayerId", conn))
+                    {
+                        cmdGangMember.Parameters.AddWithValue("@GangId", gangId);
+                        cmdGangMember.Parameters.AddWithValue("@PlayerId", playerId);
+
+                        cmdGangMember.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public List<Player> GetPlayersWithoutGang()
@@ -122,7 +188,7 @@ namespace Data.Context.SQL
             try
             {
                 Gang gang = new Gang();
-                using (SqlConnection conn = dbConnection.GetConnString())
+                using (SqlConnection conn = _dbConnection.GetConnString())
                 {
                     conn.Open();
                     using (SqlCommand cmd = new SqlCommand("SELECT * FROM [dbo].[Gang] WHERE GangId = @GangId", conn))
@@ -158,7 +224,7 @@ namespace Data.Context.SQL
         {
             try
             {
-                using (SqlConnection conn = dbConnection.GetConnString())
+                using (SqlConnection conn = _dbConnection.GetConnString())
                 {
                     conn.Open();
                     using (SqlCommand cmd = new SqlCommand("UPDATE [dbo].[Gang] SET name = @name, tag = @tag, description = @description WHERE GangId = @GangId", conn))
@@ -178,21 +244,40 @@ namespace Data.Context.SQL
             }
         }
 
-        public void RemoveGang(int id)
+        // Removes All GangMembers from Gang, THEN removes the Gang itself
+        public void RemoveGang(int gangId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+                    using (SqlCommand cmdGangMember = new SqlCommand("DELETE FROM [dbo].[GangMember] WHERE GangId = @GangId", conn),
+                        cmdGang = new SqlCommand("DELETE FROM [dbo].[Gang] WHERE GangId = @GangId", conn))
+                    {
+                        cmdGangMember.Parameters.AddWithValue("@GangId", gangId);
+                        cmdGang.Parameters.AddWithValue("@GangId", gangId);
+                        cmdGangMember.ExecuteNonQuery();
+                        cmdGang.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
-        // TODO: Add current player to gang as leader when gang is created
+        // Creates Gang, [Then Adds current user as GangMember With Leader Role]
+        // TODO: Add current player to gang as leader when gang is created. Maar eerst sessions en inloggen regelen
         public void CreateGang(Gang gang)
         {
             try
             {
-                using (SqlConnection conn = dbConnection.GetConnString())
+                using (SqlConnection conn = _dbConnection.GetConnString())
                 {
                     conn.Open();
-                    //INSERT INTO Customers(CustomerName, ContactName, Address, City, PostalCode, Country)
-                    //VALUES('Cardinal', 'Tom B. Erichsen', 'Skagen 21', 'Stavanger', '4006', 'Norway');
                     using (SqlCommand cmd = new SqlCommand("INSERT INTO [dbo].[Gang] (name, tag, description, money, income, dateFounded) " +
                                                            "VALUES(@name, @tag, @description, @money, @income, @dateFounded)", conn))
                     {
@@ -212,9 +297,6 @@ namespace Data.Context.SQL
                 Console.WriteLine(e);
                 throw;
             }
-
-
-            //_gangs.Add(gang);
         }
     }
 }

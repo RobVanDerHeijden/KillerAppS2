@@ -82,5 +82,16 @@ namespace KillerAppS2.Controllers
             _gangLogic.CreateGang(gang);
             return RedirectToAction("Index");
         }
+
+        public IActionResult RemovePlayerFromGang(int id)
+        {
+            _gangLogic.RemovePlayerFromGang(id);
+            return RedirectToAction("DetailsGang");
+        }
+
+        public IActionResult InvitePlayer()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
