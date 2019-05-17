@@ -44,7 +44,8 @@
             </td>
             <td>
                 @*TODO: FIX*@
-                @*@gang.Players.Count()*@
+                
+                @gang.Players?.Count()
             </td>
             <td>
                 @Html.ActionLink("Edit", "EditGang", new { id = gang.GangId }) |

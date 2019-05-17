@@ -13,7 +13,7 @@ namespace Data.Repositorys
 
         public GangRepository()
         {
-            _igangContext = new GangSQLContext();
+            _igangContext = new GangSqlContext();
             _iplayerContext = new PlayerMemoryContext();
         }
 

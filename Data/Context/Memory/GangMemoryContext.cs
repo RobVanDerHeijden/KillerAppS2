@@ -8,13 +8,6 @@ namespace Data.Context
 {
     public class GangMemoryContext : IGangContext
     {
-        private static readonly List<Player> _players = new List<Player>
-        {
-            new Player(101, "Faker"),
-            new Player(102, "Looking4Team"),
-            new Player(103, "TheOddOne"),
-        };
-
         private static readonly List<Player> _playersNaga = new List<Player>() {
             new Player(1, "FriendlyRob", 99, 875),
             new Player(2, "ION8", 2, 20),
@@ -31,7 +24,12 @@ namespace Data.Context
             new Player(10, "Nomis", 25, 325),
             new Player(11, "Vaips", 22, 295)
         };
-
+        private static readonly List<Player> _players = new List<Player>
+        {
+            new Player(101, "Faker"),
+            new Player(102, "Looking4Team"),
+            new Player(103, "TheOddOne"),
+        };
         private static readonly List<Gang> _gangs = new List<Gang>()
         {
             new Gang(1, _playersNaga, "Zephyr Naga", "Naga", "One of the coolest teams in Zephyr", 12.50m, 0.50m, DateTime.Today),
