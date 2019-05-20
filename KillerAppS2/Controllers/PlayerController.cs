@@ -13,7 +13,7 @@ namespace KillerAppS2.Controllers
     public class PlayerController : Controller
     {
 
-        private PlayerLogic _playerLogic = new PlayerLogic();
+        private readonly PlayerLogic _playerLogic = new PlayerLogic();
         public ActionResult Index()
         {
             IEnumerable<Player> players = _playerLogic.GetPlayers();
@@ -37,5 +37,11 @@ namespace KillerAppS2.Controllers
             return RedirectToAction(actionName: "Index", controllerName: "Home");
         }
 
+        public IActionResult PlayersWithoutGang()
+        {
+            IEnumerable<Player> players = _playerLogic.GetPlayersWithoutGang();
+
+            return View(players);
+        }
     }
 }

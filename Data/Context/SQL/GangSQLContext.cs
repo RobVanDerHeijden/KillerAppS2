@@ -178,11 +178,8 @@ namespace Data.Context.SQL
             }
         }
 
-        public List<Player> GetPlayersWithoutGang()
-        {
-            throw new NotImplementedException();
-        }
 
+        
         public Gang GetGangWithId(int gangId)
         {
             try

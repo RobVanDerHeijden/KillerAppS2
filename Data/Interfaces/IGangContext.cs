@@ -10,7 +10,7 @@ namespace Data.Interfaces
         void AddPlayerToGang(int playerId, int gangId);
         void RemovePlayerFromGang(int playerId, int gangId);
         void RemovePlayerFromGang(int playerId);
-        List<Player> GetPlayersWithoutGang();
+        
         Gang GetGangWithId(int id);
         void UpdateGang(Gang gang);
         void RemoveGang(int id);

@@ -13,5 +13,10 @@ namespace Logic
         {
             return PlayerRepo.Players;
         }
+
+        public List<Player> GetPlayersWithoutGang()
+        {
+            return PlayerRepo.GetPlayersWithoutGang();
+        }
     }
 }

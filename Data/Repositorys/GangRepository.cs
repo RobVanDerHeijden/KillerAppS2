@@ -36,11 +36,7 @@ namespace Data.Repositorys
         {
             _igangContext.RemovePlayerFromGang(playerId);
         }
-
-        public List<Player> GetPlayersWithoutGang()
-        {
-            return _igangContext.GetPlayersWithoutGang();
-        }
+        
         public Gang GetGangWithId(int id)
         {
             return _igangContext.GetGangWithId(id);

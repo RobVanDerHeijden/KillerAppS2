@@ -92,11 +92,11 @@ namespace Data.Context
             throw new NotImplementedException();
         }
 
-        // TODO: Kijk of ik deze in de Gang of Player wil
-        public List<Player> GetPlayersWithoutGang()
-        {
-            return _players;
-        }
+        //// TODO: Kijk of ik deze in de Gang of Player wil
+        //public List<Player> GetPlayersWithoutGang()
+        //{
+        //    return _players;
+        //}
 
         public Gang GetGangWithId(int id)
         {

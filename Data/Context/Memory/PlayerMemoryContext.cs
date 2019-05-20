@@ -40,6 +40,7 @@ namespace Data.Context
         public List<Player> GetPlayersWithoutGang()
         {
             throw new NotImplementedException();
+            //return _players;
         }
 
         public Player GetPlayerWithId(int id)

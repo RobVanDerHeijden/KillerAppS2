@@ -1,5 +1,4 @@
-﻿@*@model IEnumerable<Model.Player>*@
-@model System.Collections.Generic.IEnumerable<Model.Player>
+﻿@model System.Collections.Generic.IEnumerable<Model.Player>
 
 @{
     ViewData["Title"] = "Index";
@@ -8,7 +7,7 @@
 <h2>Index</h2>
 
 <p>
-    <a asp-action="CreatePlayer">Create New</a>
+    <a asp-action="PlayersWithoutGang">Players Without Gang</a>
 </p>
 <table class="table">
     <thead>
@@ -45,9 +44,9 @@
                     @Html.DisplayFor(modelItem => player.Experience)
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "EditPlayer", new { /* id=item.PrimaryKey */ }) |
                     @Html.ActionLink("Details", "DetailsPlayer", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "DeletePlayer", new { /* id=item.PrimaryKey */ })
+                    @Html.ActionLink("Add as Friend", "AddPlayerAsFriend", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Add as Enemy", "AddPlayerAsEnemy", new { /* id=item.PrimaryKey */ })
                 </td>
             </tr>
         }

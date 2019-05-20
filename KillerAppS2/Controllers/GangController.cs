@@ -11,7 +11,7 @@ namespace KillerAppS2.Controllers
 {
     public class GangController : Controller
     {
-        private GangLogic _gangLogic = new GangLogic();
+        private readonly GangLogic _gangLogic = new GangLogic();
         // GET: Gang
         public ActionResult Index()
         {

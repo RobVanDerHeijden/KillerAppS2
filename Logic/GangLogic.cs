@@ -32,10 +32,7 @@ namespace Logic
             _gangRepo.RemovePlayerFromGang(playerId);
         }
 
-        public List<Player> GetPlayersWithoutGang()
-        {
-            return _gangRepo.GetPlayersWithoutGang();
-        }
+        
 
         public Gang GetGangWithId(int id)
         {
