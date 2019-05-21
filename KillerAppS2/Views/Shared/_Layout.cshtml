@@ -35,15 +35,26 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                    <li><a asp-area="" asp-controller="Player" asp-action="Index">Player</a></li>
-                    <li><a asp-area="" asp-controller="Gang" asp-action="Index">Gang</a></li>
+                    @if (Context.Session.GetString("Role") == "Admin")
+                    {
+                        <li><a asp-area="" asp-controller="Player" asp-action="Index">Player</a></li>
+                        <li><a asp-area="" asp-controller="Gang" asp-action="Index">Gang</a></li>
+                    }
+                    @if (Context.Session.GetString("Role") == "Player")
+                    {
+                        <li><a asp-area="" asp-controller="Player" asp-action="MyGang">MyGang</a></li>
+                    }
+                </ul>
+                <ul class="nav navbar-nav login-links">
                     @if (Context.Session.GetString("Username") != null)
                     {
+                        <li><a asp-area="" asp-controller="Player" asp-action="PlayerDashBoard">DashBoard</a></li>
                         <li><a asp-area="" asp-controller="Player" asp-action="Logout">Logout</a></li>
                     }
                     else
                     {
                         <li><a asp-area="" asp-controller="Player" asp-action="Login">Login</a></li>
+                        // TODO: Add Register page
                     }
                 </ul>
             </div>

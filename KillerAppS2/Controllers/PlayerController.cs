@@ -37,10 +37,8 @@ namespace KillerAppS2.Controllers
                 {
                     HttpContext.Session.SetInt32("PlayerId", player.PlayerId);
                     HttpContext.Session.SetString("Username", player.Username);
-                    if (player.Role == "Player")
-                    {
-                        HttpContext.Session.SetString("Role", "Player");
-                    }
+                    HttpContext.Session.SetString("Role", player.Role);
+                    HttpContext.Session.SetInt32("PlayerLevel", player.PlayerLevel);
                 }
                 else
                 {
@@ -48,22 +46,23 @@ namespace KillerAppS2.Controllers
                     return View();
                 }
             }
-            //return RedirectToAction(actionName: "Index");
-            return RedirectToAction("UserDashBoard");
+            return RedirectToAction("PlayerDashBoard");
         }
 
-        public ActionResult UserDashBoard()
+        public ActionResult PlayerDashBoard()
         {
             if (HttpContext.Session.GetInt32("PlayerId") != null)
             {
                 return View();
             }
             // Else
+            //ViewData["LoginError"] = "You are not logged in. Please log in and try again";
             return RedirectToAction("Login");
         }
 
         public IActionResult Logout()
         {
+            HttpContext.Session.Clear();
             return RedirectToAction(actionName: "Index", controllerName: "Home");
         }
 
