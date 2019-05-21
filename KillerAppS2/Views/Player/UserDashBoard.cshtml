@@ -1,0 +1,15 @@
+﻿@using Microsoft.AspNetCore.Http
+@model System.Collections.Generic.IEnumerable<Model.Player>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>title</h2>
+
+<fieldset>
+    <legend> User DashBoard </legend>
+    <text> Welcome </text>
+    @Context.Session.GetString("Username")
+</fieldset> 

@@ -23,6 +23,7 @@ namespace Model
         public List<Hack> Hacks { get; set; }
         public List<Mission> Missions { get; set; }
         public List<Achievement> Achievements { get; set; }
+        public string Role { get; set; }
 
 
         public Player()

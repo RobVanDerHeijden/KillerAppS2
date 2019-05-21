@@ -18,5 +18,10 @@ namespace Logic
         {
             return PlayerRepo.GetPlayersWithoutGang();
         }
+
+        public Player Login(string username, string password)
+        {
+            return PlayerRepo.Login(username, password);
+        }
     }
 }

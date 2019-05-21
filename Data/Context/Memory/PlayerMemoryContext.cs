@@ -62,5 +62,10 @@ namespace Data.Context
         {
             throw new NotImplementedException();
         }
+
+        public Player Login(string username, string password)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

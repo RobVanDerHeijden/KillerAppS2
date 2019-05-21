@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@using Model
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -35,13 +37,13 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                     <li><a asp-area="" asp-controller="Player" asp-action="Index">Player</a></li>
                     <li><a asp-area="" asp-controller="Gang" asp-action="Index">Gang</a></li>
-                    @if (true)
+                    @if (Context.Session.GetString("Username") != null)
                     {
-                        <li><a asp-area="" asp-controller="Player" asp-action="Logout">logout</a></li>
+                        <li><a asp-area="" asp-controller="Player" asp-action="Logout">Logout</a></li>
                     }
                     else
                     {
-                        <li><a asp-area="" asp-controller="Player" asp-action="Login">login</a></li>
+                        <li><a asp-area="" asp-controller="Player" asp-action="Login">Login</a></li>
                     }
                 </ul>
             </div>

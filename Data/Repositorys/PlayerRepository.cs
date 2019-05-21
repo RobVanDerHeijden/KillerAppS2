@@ -20,5 +20,10 @@ namespace Data.Repositorys
         {
             return _iplayerContext.GetPlayersWithoutGang();
         }
+
+        public Player Login(string username, string password)
+        {
+            return _iplayerContext.Login(username, password);
+        }
     }
 }

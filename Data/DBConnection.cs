@@ -6,7 +6,7 @@ namespace Data
     public class DBConnection
     {
         internal SqlConnection SqlConnection { get; }
-        private string _connectionString;
+        private readonly string _connectionString;
 
         public DBConnection()
         {

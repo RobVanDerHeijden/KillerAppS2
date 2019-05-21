@@ -27,11 +27,41 @@ namespace KillerAppS2.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Login(LoginViewModel user)
         {
-            return RedirectToAction(actionName: "Index");
+            if (ModelState.IsValid)
+            {
+                Player player = _playerLogic.Login(user.Username, user.Password);
+                if (player != null)
+                {
+                    HttpContext.Session.SetInt32("PlayerId", player.PlayerId);
+                    HttpContext.Session.SetString("Username", player.Username);
+                    if (player.Role == "Player")
+                    {
+                        HttpContext.Session.SetString("Role", "Player");
+                    }
+                }
+                else
+                {
+                    ViewData["LoginError"] = "Your login attempt was not successful. Please try again";
+                    return View();
+                }
+            }
+            //return RedirectToAction(actionName: "Index");
+            return RedirectToAction("UserDashBoard");
         }
-        
+
+        public ActionResult UserDashBoard()
+        {
+            if (HttpContext.Session.GetInt32("PlayerId") != null)
+            {
+                return View();
+            }
+            // Else
+            return RedirectToAction("Login");
+        }
+
         public IActionResult Logout()
         {
             return RedirectToAction(actionName: "Index", controllerName: "Home");

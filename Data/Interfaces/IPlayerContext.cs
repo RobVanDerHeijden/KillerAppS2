@@ -12,7 +12,7 @@ namespace Data.Interfaces
         void UpdatePlayer(Player player);
         void RemovePlayer(int id);
         void CreatePlayer(Player player);
-
-
+        
+        Player Login(string username, string password);
     }
 }
