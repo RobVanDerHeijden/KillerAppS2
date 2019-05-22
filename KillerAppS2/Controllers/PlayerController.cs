@@ -36,9 +36,15 @@ namespace KillerAppS2.Controllers
                 if (player != null)
                 {
                     HttpContext.Session.SetInt32("PlayerId", player.PlayerId);
-                    HttpContext.Session.SetString("Username", player.Username);
                     HttpContext.Session.SetString("Role", player.Role);
+                    // Displayable information
+                    HttpContext.Session.SetString("Username", player.Username);
                     HttpContext.Session.SetInt32("PlayerLevel", player.PlayerLevel);
+                    HttpContext.Session.SetString("Experience", player.Experience.ToString());
+                    HttpContext.Session.SetString("Money", player.Money.ToString());
+                    HttpContext.Session.SetString("Income", player.Income.ToString());
+                    HttpContext.Session.SetString("SkillPoints", player.SkillPoints.ToString());
+                    HttpContext.Session.SetString("Energy", player.Energy.ToString());
                 }
                 else
                 {

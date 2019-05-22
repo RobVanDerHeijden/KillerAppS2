@@ -36,6 +36,46 @@ body {
     }
 }
 
-ul.login-links.nav.navbar-nav {
+/* Login Links */
+.login-links {
     float: right;
+}
+
+/* Sidebar*/
+.sidenav {
+    width: 150px;
+    position: fixed;
+    background: #eee;
+    margin-top: 20px;
+    margin-right: 20px;
+    color: #333;
+}
+.sidenav p {
+    margin: 0px;
+    font-size: 12px;
+}
+.sidenav h2 {
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px;
+    background-color: burlywood;
+    margin: 0px;
+}
+.main-body {
+    margin-left: 160px; /* Same width as the sidebar + left position in px */
+    padding-bottom: 20px; /* Footer height */
+}
+.sidenav-block-content {
+    padding: 5px;
+}
+/* Footer */
+footer {
+    position: absolute;
+    bottom: 0;
+    height: 20px; /* Footer height */
+}
+body {
+    color: #fff;
+    background-color: #424242;
 }

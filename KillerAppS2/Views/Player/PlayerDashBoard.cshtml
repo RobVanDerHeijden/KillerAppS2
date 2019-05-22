@@ -2,14 +2,12 @@
 @model System.Collections.Generic.IEnumerable<Model.Player>
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "Player DashBoard";
     Layout = "_Layout";
 }
 
-<h2>title</h2>
+<h2>Player DashBoard</h2>
 
 <fieldset>
-    <legend> User DashBoard </legend>
-    <text> Welcome </text>
-    @Context.Session.GetString("Username")
+    <p>Welcome @Context.Session.GetString("Username")</p>
 </fieldset> 

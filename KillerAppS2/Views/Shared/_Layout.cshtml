@@ -48,7 +48,7 @@
                 <ul class="nav navbar-nav login-links">
                     @if (Context.Session.GetString("Username") != null)
                     {
-                        <li><a asp-area="" asp-controller="Player" asp-action="PlayerDashBoard">DashBoard</a></li>
+                        <li><a asp-area="" asp-controller="Player" asp-action="PlayerDashBoard">@Context.Session.GetString("Username")</a></li>
                         <li><a asp-area="" asp-controller="Player" asp-action="Logout">Logout</a></li>
                     }
                     else
@@ -64,8 +64,50 @@
     <partial name="_CookieConsentPartial" />
 
     <div class="container body-content">
-        @RenderBody()
-        <hr />
+        @if (Context.Session.GetString("Username") != null)
+        {
+            <div class="sidenav">
+                <div class="sidenav-block">
+                    <div class="sidenav-block-header">
+                        <h2>Information</h2>
+                    </div>
+                    <div class="sidenav-block-content">
+                        <p>Name: @Context.Session.GetString("Username")</p>
+                        <p>Level: @Context.Session.GetInt32("PlayerLevel")</p>
+                        <p>Experience: @Context.Session.GetString("Experience")</p>
+                        <p>Money: @Context.Session.GetString("Money")</p>
+                        <p>Income: @Context.Session.GetString("Income")</p>
+                        <p>Skill Points: @Context.Session.GetString("SkillPoints")</p>
+                        <p>Energy: @Context.Session.GetString("Energy")</p>
+                    </div>
+                </div>
+
+                <div class="sidenav-block">
+                    <div class="sidenav-block-header">
+                        <h2>Actions</h2>
+                    </div>
+                    <div class="sidenav-block-content">
+
+                    </div>
+                </div>
+                <div class="sidenav-block">
+                    <div class="sidenav-block-header">
+                        <h2>Relations</h2>
+                    </div>
+                    <div class="sidenav-block-content">
+                    </div>
+                </div>
+            </div>
+            <div class="main-body">
+                @RenderBody()
+            </div>
+        }
+        else
+        {
+            @RenderBody()
+        }
+
+        @*<hr/>*@
         <footer>
             <p>&copy; 2019 - KillerAppS2</p>
         </footer>
