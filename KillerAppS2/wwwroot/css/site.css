@@ -35,7 +35,7 @@ body {
         display: none;
     }
 }
-
+/***************************************************/
 /* Login Links */
 .login-links {
     float: right;
@@ -69,6 +69,11 @@ body {
 .sidenav-block-content {
     padding: 5px;
 }
+.sidenav-block-content ul {
+    list-style: none;
+    padding: 0px;
+}
+
 /* Footer */
 footer {
     position: absolute;

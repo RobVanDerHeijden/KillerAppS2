@@ -78,5 +78,10 @@ namespace KillerAppS2.Controllers
 
             return View(players);
         }
+
+        public IActionResult Hacks()
+        {
+            return View();
+        }
     }
 }
