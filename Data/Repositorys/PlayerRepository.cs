@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Dynamic;
 using Data.Context;
 using Data.Context.SQL;
 using Data.Interfaces;
@@ -25,5 +26,16 @@ namespace Data.Repositorys
         {
             return _iplayerContext.Login(username, password);
         }
+
+        public List<Hack> GetAvailableHakcs(int id)
+        {
+            return _iplayerContext.GetAvailableHacks(id);
+        }
+
+        public void UpdatePlayerLevels()
+        {
+            _iplayerContext.UpdatePlayerLevels();
+        }
+
     }
 }

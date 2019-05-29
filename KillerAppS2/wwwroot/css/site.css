@@ -73,6 +73,17 @@ body {
     list-style: none;
     padding: 0px;
 }
+.bunky-blue {
+    color: #fff !important;
+    background-color: #2196F3 !important;
+}
+.bunky-container, .bunky-panel {
+    padding: 0.1px 16px;
+}
+.bunky-round-xlarge {
+    border-radius: 16px;
+    height: 8px;
+}
 
 /* Footer */
 footer {

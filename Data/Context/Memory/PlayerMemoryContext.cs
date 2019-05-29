@@ -67,5 +67,20 @@ namespace Data.Context
         {
             throw new NotImplementedException();
         }
+
+        public List<Hack> GetAvailableHacks(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdatePlayerLevels()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int CalculatePlayerLevel(int experience)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

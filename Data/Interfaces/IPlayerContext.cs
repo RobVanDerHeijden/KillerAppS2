@@ -14,5 +14,8 @@ namespace Data.Interfaces
         void CreatePlayer(Player player);
         
         Player Login(string username, string password);
+        List<Hack> GetAvailableHacks(int id);
+
+        void UpdatePlayerLevels();
     }
 }

@@ -8,7 +8,7 @@ namespace KillerAppS2.Models
 {
     public class LoginViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Fill in username!")]
         public string Username { get; set; }
 
         [Required]

@@ -34,7 +34,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    @*<li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>*@
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                     @if (Context.Session.GetString("Role") == "Admin")
@@ -50,12 +50,12 @@
                 <ul class="nav navbar-nav login-links">
                     @if (Context.Session.GetString("Username") != null)
                     {
-                        <li><a asp-area="" asp-controller="Player" asp-action="PlayerDashBoard">@Context.Session.GetString("Username")</a></li>
-                        <li><a asp-area="" asp-controller="Player" asp-action="Logout">Logout</a></li>
+                        <li><a asp-area="" asp-controller="Player" asp-action="PlayerDashBoard"><i class="fas fa-user"></i> @Context.Session.GetString("Username")</a></li>
+                        <li><a asp-area="" asp-controller="Player" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                     }
                     else
                     {
-                        <li><a asp-area="" asp-controller="Player" asp-action="Login">Login</a></li>
+                        <li><a asp-area="" asp-controller="Player" asp-action="Login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
                         // TODO: Add Register page
                     }
                 </ul>
@@ -72,7 +72,7 @@
 
                 <div class="sidenav-block">
                     <div class="sidenav-block-header">
-                        <h2>Information</h2>
+                        <h2><i class="fas fa-info-circle"></i> Information</h2>
                     </div>
                     <div class="sidenav-block-content">
                         <p>Name: @Context.Session.GetString("Username")</p>
@@ -81,13 +81,17 @@
                         <p>Money: @Context.Session.GetString("Money")</p>
                         <p>Income: @Context.Session.GetString("Income")</p>
                         <p>Skill Points: @Context.Session.GetString("SkillPoints")</p>
-                        <p>Energy: @Context.Session.GetString("Energy")</p>
+
+                        <p>Energy: @Context.Session.GetString("Energy") / (maxenergy)</p>
+                        <div class="bunky-round-xlarge">
+                            <div class="bunky-container bunky-blue bunky-round-xlarge bunky-bar-energy" style="width:25%"></div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="sidenav-block">
                     <div class="sidenav-block-header">
-                        <h2>Actions</h2>
+                        <h2><i class="fas fa-fist-raised"></i> Actions</h2>
                     </div>
                     <div class="sidenav-block-content">
                         <ul>
@@ -102,7 +106,7 @@
 
                 <div class="sidenav-block">
                     <div class="sidenav-block-header">
-                        <h2>Relations</h2>
+                        <h2><i class="fas fa-users"></i> Relations</h2>
                     </div>
                     <div class="sidenav-block-content">
                         <ul>

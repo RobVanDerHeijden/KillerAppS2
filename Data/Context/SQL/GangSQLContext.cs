@@ -177,8 +177,6 @@ namespace Data.Context.SQL
                 throw;
             }
         }
-
-
         
         public Gang GetGangWithId(int gangId)
         {

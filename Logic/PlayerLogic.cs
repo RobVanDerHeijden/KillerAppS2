@@ -23,5 +23,15 @@ namespace Logic
         {
             return PlayerRepo.Login(username, password);
         }
+
+        public List<Hack> GetAvailableHacks(int id)
+        {
+            return PlayerRepo.GetAvailableHakcs(id);
+        }
+
+        public void UpdatePlayerLevels()
+        {
+            PlayerRepo.UpdatePlayerLevels();
+        }
     }
 }

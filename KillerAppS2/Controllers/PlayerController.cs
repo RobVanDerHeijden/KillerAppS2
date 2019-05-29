@@ -46,11 +46,11 @@ namespace KillerAppS2.Controllers
                     HttpContext.Session.SetString("SkillPoints", player.SkillPoints.ToString());
                     HttpContext.Session.SetString("Energy", player.Energy.ToString());
                 }
-                else
-                {
-                    ViewData["LoginError"] = "Your login attempt was not successful. Please try again";
-                    return View();
-                }
+            }
+            else
+            {
+                ViewData["LoginError"] = "Your login attempt was not successful. Please try again";
+                return View(user);
             }
             return RedirectToAction("PlayerDashBoard");
         }
@@ -81,7 +81,26 @@ namespace KillerAppS2.Controllers
 
         public IActionResult Hacks()
         {
-            return View();
+            int playerLevel = 0;
+            if (HttpContext.Session.GetInt32("PlayerLevel") != null)
+            {
+                playerLevel = (int) HttpContext.Session.GetInt32("PlayerLevel");
+            }
+
+            HackViewModel HVmodel = new HackViewModel();
+            HVmodel.Hacks = _playerLogic.GetAvailableHacks(playerLevel);
+
+            return View(HVmodel);
+        }
+
+        public IActionResult DoHack(int id)
+        {
+            // check if succes (based on difficulty and skill in category)
+            // update/add experience/reward
+            _playerLogic.UpdatePlayerLevels();
+            // clear/refresh levels
+            // viewbag/viewdata message: succes! of Failed!
+            return RedirectToAction(actionName: "Hacks", controllerName: "Player");
         }
     }
 }

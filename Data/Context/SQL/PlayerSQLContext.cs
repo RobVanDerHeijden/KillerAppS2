@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Security.Cryptography.X509Certificates;
 using Data.Interfaces;
 using Model;
@@ -164,7 +166,6 @@ namespace Data.Context.SQL
                         }
                     }
                 }
-
                 return player;
             }
             catch (Exception e)
@@ -174,6 +175,83 @@ namespace Data.Context.SQL
             }
         }
 
+        public List<Hack> GetAvailableHacks(int id)
+        {
+            try
+            {
+                List<Hack> hacks = new List<Hack>();
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = 
+                        new SqlCommand("SELECT H.*, RT.name AS RewardName, SC.name AS SkillCategoryName " +
+                                       "FROM Hack H " +
+                                       "INNER JOIN RewardType RT ON RT.RewardTypeID = H.RewardTypeID " +
+                                       "INNER JOIN SkillCategory SC ON SC.SkillCategoryID = H.SkillCategoryID " +
+                                       "WHERE minimalLevel <= @id;", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@id", id);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Hack hack = new Hack
+                                {
+                                    HackId = (int) reader["HackID"],
+                                    Name = (string) reader["name"],
+                                    Description = (string) reader["description"],
+                                    BaseDifficulty = (int) reader["baseDifficulty"],
+                                    SkillCategoryId = (int) reader["SkillCategoryID"],
+                                    SkillDifficulty = (int) reader["skillDifficulty"],
+                                    EnergyCost = (int)reader["energyCost"],
+                                    Reward = (int)reader["reward"],
+                                    RewardTypeId = (int)reader["RewardTypeID"],
+                                    RewardName = (string)reader["RewardName"],
+                                    SkillCategoryName = (string)reader["SkillCategoryName"]
+                                };
+                                hacks.Add(hack);
+                            }
+                        }
+                    }
+                }
+                return hacks;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
 
+        // STORED PROCEDURE: dbo.calcLevel
+        // Recalculates players level with Query: UPDATE Player SET playerLevel = FLOOR(SQRT(experience)) * 0.2
+        public void UpdatePlayerLevels()
+        {
+            try
+            {
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand(
+                        "dbo.calcLevel", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Console.WriteLine(
+                                    reader["experience"]);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
     }
 }
