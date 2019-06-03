@@ -62,7 +62,7 @@ namespace KillerAppS2.Controllers
                 return View();
             }
             // Else
-            //ViewData["LoginError"] = "You are not logged in. Please log in and try again";
+            ViewData["LoginError"] = "You are not logged in. Please log in and try again";
             return RedirectToAction("Login");
         }
 
@@ -74,9 +74,10 @@ namespace KillerAppS2.Controllers
 
         public IActionResult PlayersWithoutGang()
         {
-            IEnumerable<Player> players = _playerLogic.GetPlayersWithoutGang();
+            PlayerViewModel PVmodel = new PlayerViewModel();
+            PVmodel.Players = _playerLogic.GetPlayersWithoutGang();
 
-            return View(players);
+            return View(PVmodel);
         }
 
         public IActionResult Hacks()
@@ -95,11 +96,26 @@ namespace KillerAppS2.Controllers
 
         public IActionResult DoHack(int id)
         {
+            int playerId = 0;
+            if (HttpContext.Session.GetInt32("PlayerId") != null)
+            {
+                playerId = (int)HttpContext.Session.GetInt32("PlayerId");
+
+                
+            }
             // check if succes (based on difficulty and skill in category)
-            // update/add experience/reward
-            _playerLogic.UpdatePlayerLevels();
-            // clear/refresh levels
-            // viewbag/viewdata message: succes! of Failed!
+            if (_playerLogic.IsHackSuccessful(id, playerId))
+            {
+                // update/add experience/reward + clear/refresh levels
+                _playerLogic.UpdatePlayerLevels();
+
+                ViewData["HackCompleteNotice"] = "Hack was a succes!";
+            }
+            else
+            {
+                ViewData["HackCompleteNotice"] = "Hack was a failure!";
+            }
+            
             return RedirectToAction(actionName: "Hacks", controllerName: "Player");
         }
     }

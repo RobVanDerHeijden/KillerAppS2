@@ -6,7 +6,7 @@ using Model;
 
 namespace Data.Context
 {
-    class PlayerMemoryContext : IPlayerContext
+    class PlayerMemoryContext// : IPlayerContext
     {
         private List<Player> _players = new List<Player>
         {

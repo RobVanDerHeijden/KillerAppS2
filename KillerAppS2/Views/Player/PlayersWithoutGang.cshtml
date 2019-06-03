@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Model.Player>
+﻿@model PlayerViewModel
 
 @{
     ViewData["Title"] = "PlayersWithoutGang";
@@ -13,46 +13,46 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.PlayerId)
+                @Html.DisplayNameFor(model => model.Player.PlayerId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Username)
+                @Html.DisplayNameFor(model => model.Player.Username)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Password)
+                @Html.DisplayNameFor(model => model.Player.Password)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PlayerLevel)
+                @Html.DisplayNameFor(model => model.Player.PlayerLevel)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Experience)
+                @Html.DisplayNameFor(model => model.Player.Experience)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SkillPoints)
+                @Html.DisplayNameFor(model => model.Player.SkillPoints)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Money)
+                @Html.DisplayNameFor(model => model.Player.Money)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Income)
+                @Html.DisplayNameFor(model => model.Player.Income)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Energy)
+                @Html.DisplayNameFor(model => model.Player.Energy)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RealName)
+                @Html.DisplayNameFor(model => model.Player.RealName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Country)
+                @Html.DisplayNameFor(model => model.Player.Country)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.City)
+                @Html.DisplayNameFor(model => model.Player.City)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Players) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.PlayerId)

@@ -11,6 +11,6 @@ namespace KillerAppS2.Models
     {
         public List<Hack> Hacks { get; set; }
 
-        public Hack hack { get; set; }
+        public Hack Hack { get; set; }
     }
 }

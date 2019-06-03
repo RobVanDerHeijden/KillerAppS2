@@ -33,5 +33,10 @@ namespace Logic
         {
             PlayerRepo.UpdatePlayerLevels();
         }
+
+        public bool IsHackSuccessful(int hackId, int playerId)
+        {
+            return PlayerRepo.IsHackSuccessful(hackId, playerId);
+        }
     }
 }

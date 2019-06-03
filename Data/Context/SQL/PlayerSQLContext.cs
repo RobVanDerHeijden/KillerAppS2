@@ -240,8 +240,7 @@ namespace Data.Context.SQL
                         {
                             while (reader.Read())
                             {
-                                Console.WriteLine(
-                                    reader["experience"]);
+                                Console.WriteLine(reader["experience"]);
                             }
                         }
                     }
@@ -253,5 +252,81 @@ namespace Data.Context.SQL
                 throw;
             }
         }
+
+        public bool IsHackSuccessful(int hackId, int playerId)
+        {
+            bool isHackSucces = false;
+            Hack selectedHack = null;
+            //int totalSkillsInCategory = 0;
+            double totalSkillPointsInCategory = 0;
+            double maxSkillPointsInCategory = 0;
+            double categoryRatio = 0;
+            Random rnd = new Random();
+            int succesChance = rnd.Next(1, 101);
+            try
+            {
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("SELECT H.*, RT.name AS RewardName, SC.name AS SkillCategoryName " +
+                                                           "FROM Hack H " +
+                                                           "INNER JOIN RewardType RT ON RT.RewardTypeID = H.RewardTypeID " +
+                                                           "INNER JOIN SkillCategory SC ON SC.SkillCategoryID = H.SkillCategoryID " +
+                                                           "WHERE HackID <= @HackID;", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@HackID", hackId);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                selectedHack = new Hack
+                                {
+                                    HackId = (int)reader["HackID"],
+                                    BaseDifficulty = (int)reader["baseDifficulty"],
+                                    SkillCategoryId = (int)reader["SkillCategoryID"],
+                                    SkillDifficulty = (int)reader["skillDifficulty"],
+                                };
+                            }
+                        }
+                    }
+
+                    if (selectedHack != null)
+                    {
+                        using (SqlCommand cmdPointsSkills = new SqlCommand(
+                        "SELECT S.name, PS.skillPoints AS PlayerSkillPoints, PS.maxSkillPoints " +
+                        "FROM Skill S " +
+                        "INNER JOIN PlayerSkill PS ON PS.SkillID = S.SkillID " +
+                        "WHERE S.SkillCategoryID = @SkillCategoryID " +
+                        "AND PS.PlayerID = @playerID", conn))
+                        {
+                            cmdPointsSkills.Parameters.AddWithValue("@SkillCategoryID", selectedHack.SkillCategoryId);
+                            cmdPointsSkills.Parameters.AddWithValue("@playerID", playerId);
+                            using (SqlDataReader reader = cmdPointsSkills.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    totalSkillPointsInCategory += (int) reader["PlayerSkillPoints"];
+                                    maxSkillPointsInCategory += (int) reader["maxSkillPoints"];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            categoryRatio = totalSkillPointsInCategory / maxSkillPointsInCategory;
+            // TODO: i.p.v. hack.SkillDifficulty haal je value eraf op basis van % skillpunten in zelfde skillcategory
+            if (selectedHack != null && (selectedHack.SkillDifficulty * categoryRatio) + selectedHack.BaseDifficulty <= succesChance)
+            {
+                isHackSucces = true;
+            }
+            return isHackSucces;
+        }
     }
 }
+ 

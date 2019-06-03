@@ -14,7 +14,7 @@ namespace Data.Repositorys
         public GangRepository()
         {
             _igangContext = new GangSqlContext();
-            _iplayerContext = new PlayerMemoryContext();
+            //_iplayerContext = new PlayerMemoryContext();
         }
 
         public List<Gang> Gangs => _igangContext.GetGangs();

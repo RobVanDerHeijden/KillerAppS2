@@ -37,5 +37,9 @@ namespace Data.Repositorys
             _iplayerContext.UpdatePlayerLevels();
         }
 
+        public bool IsHackSuccessful(int hackId, int playerId)
+        {
+            return _iplayerContext.IsHackSuccessful(hackId, playerId);
+        }
     }
 }
