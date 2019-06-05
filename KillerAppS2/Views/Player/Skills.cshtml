@@ -1,0 +1,46 @@
+﻿@model SkillViewModel
+
+@{
+    ViewData["Title"] = "Skills";
+}
+
+<h2>Skills</h2>
+@if (TempData["SkillUpgradeNotice"] != null)
+{
+    <p>@TempData["SkillUpgradeNotice"]</p>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Skill.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Skill.SkillPoints)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Skill.SkillCategoryName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Skills)
+        {
+            <tr>
+                <td>
+                    <label title="@Html.DisplayFor(modelItem => item.Description)">@Html.DisplayFor(modelItem => item.Name)</label>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SkillPoints) / @Html.DisplayFor(modelItem => item.MaxSkillPoints)
+                </td>
+                <td>
+                    <label title="Category mastered: @*Html.DisplayFor(modelItem => item.MaxSkillPoints)*@">@Html.DisplayFor(modelItem => item.SkillCategoryName)</label>
+                </td>
+                <td>
+                    @Html.ActionLink("Upgrade", "UpgradeSkill", new { id = item.SkillId })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

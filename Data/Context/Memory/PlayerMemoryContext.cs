@@ -78,6 +78,16 @@ namespace Data.Context
             throw new NotImplementedException();
         }
 
+        public bool PassedDifficultyCheck(int hackId, int playerId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void GivePlayerReward(int id, int playerId)
+        {
+            throw new NotImplementedException();
+        }
+
         public int CalculatePlayerLevel(int experience)
         {
             throw new NotImplementedException();

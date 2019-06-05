@@ -39,7 +39,17 @@ namespace Data.Repositorys
 
         public bool IsHackSuccessful(int hackId, int playerId)
         {
-            return _iplayerContext.IsHackSuccessful(hackId, playerId);
+            return _iplayerContext.PassedDifficultyCheck(hackId, playerId);
+        }
+
+        public void GivePlayerReward(int id, int playerId)
+        {
+            _iplayerContext.GivePlayerReward(id, playerId);
+        }
+
+        public List<Skill> GetPlayerSkills(int playerId)
+        {
+            return _iplayerContext.GetPlayerSkills(playerId);
         }
     }
 }

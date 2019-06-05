@@ -33,6 +33,7 @@ namespace KillerAppS2
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
             services.AddSession();
+            services.AddSingleton<IPlayerContext, PlayerSqlContext>();
             //services.AddScoped<IPlayerContext, PlayerSqlContext>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

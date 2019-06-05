@@ -1,11 +1,14 @@
 ﻿@model HackViewModel
 
 @{
-    ViewData["Title"] = "Hacks2";
+    ViewData["Title"] = "Hacks";
 }
 
-<h2>Hacks2</h2>
-
+<h2>Hacks</h2>
+@if (TempData["HackCompleteNotice"] != null)
+{
+    <p>@TempData["HackCompleteNotice"]</p>
+}
 <table class="table">
     <thead>
         <tr>
@@ -19,7 +22,7 @@
                 Difficulty
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Hack.SkillCategoryId)
+                Category
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Hack.EnergyCost)
@@ -28,13 +31,7 @@
                 @Html.DisplayNameFor(model => model.Hack.Reward)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Hack.RewardTypeId)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Hack.RewardName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Hack.SkillCategoryName)
             </th>
             <th></th>
         </tr>
@@ -56,7 +53,7 @@
                     <label title="Base: @item.BaseDifficulty / Skill: @item.SkillDifficulty">@totalDifficulty</label>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SkillCategoryId)
+                    <label title="@Html.DisplayFor(modelItem => item.SkillCategoryId)">@Html.DisplayFor(modelItem => item.SkillCategoryName)</label>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.EnergyCost)
@@ -65,17 +62,11 @@
                     @Html.DisplayFor(modelItem => item.Reward)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.RewardTypeId)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.RewardName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SkillCategoryName)
-                </td>
-                <td>
-                    @Html.ActionLink("Do", "DoHack", new {  id=item.HackId  }) |
-                    @Html.ActionLink("Stats", "StatsHack", new {  id=item.HackId })
+                    @Html.ActionLink("Do", "DoHack", new { id = item.HackId }) |
+                    @Html.ActionLink("Stats", "StatsHack", new { id = item.HackId })
                 </td>
             </tr>
         }

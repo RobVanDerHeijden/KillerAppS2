@@ -13,6 +13,13 @@ namespace Data.Context.SQL
     {
         private readonly DBConnection _dbConnection = new DBConnection();
 
+        //public PlayerSqlContext(IPlayerContext config)
+        //{
+        //    var myStringValue = config["MyStringKey"];
+
+        //    // Use myStringValue
+        //}
+
         public int GetLevel(int playerId)
         {
             throw new System.NotImplementedException();
@@ -27,7 +34,7 @@ namespace Data.Context.SQL
                 {
                     conn.Open();
                     // TODO: onderzoek hoe EXISTS werkt en of het beter/efficienter is
-                    using (SqlCommand cmd = new SqlCommand("SELECT  * FROM Player", conn))
+                    using (SqlCommand cmd = new SqlCommand("SELECT * FROM Player", conn))
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -106,10 +113,7 @@ namespace Data.Context.SQL
             }
         }
 
-        public Player GetPlayerWithId(int id)
-        {
-            throw new System.NotImplementedException();
-        }
+        
 
         public void UpdatePlayer(Player player)
         {
@@ -126,6 +130,7 @@ namespace Data.Context.SQL
             throw new System.NotImplementedException();
         }
 
+        // Checks if login credentials are valid -> Returns PlayerModel || Parameters username, password
         public Player Login(string username, string password)
         {
             try
@@ -175,6 +180,7 @@ namespace Data.Context.SQL
             }
         }
 
+        // Returns List of Hacks available for player based on his level || Parameter id = playerLevel
         public List<Hack> GetAvailableHacks(int id)
         {
             try
@@ -253,14 +259,12 @@ namespace Data.Context.SQL
             }
         }
 
-        public bool IsHackSuccessful(int hackId, int playerId)
+        public bool PassedDifficultyCheck(int hackId, int playerId)
         {
             bool isHackSucces = false;
             Hack selectedHack = null;
-            //int totalSkillsInCategory = 0;
             double totalSkillPointsInCategory = 0;
             double maxSkillPointsInCategory = 0;
-            double categoryRatio = 0;
             Random rnd = new Random();
             int succesChance = rnd.Next(1, 101);
             try
@@ -310,6 +314,12 @@ namespace Data.Context.SQL
                                 }
                             }
                         }
+
+                        // TODO: Check here if  thre is enaugh energy
+                        //using (SqlCommand cmdEnergy = new SqlCommand("", conn))
+                        //{
+
+                        //}
                     }
                 }
             }
@@ -319,13 +329,217 @@ namespace Data.Context.SQL
                 throw;
             }
 
-            categoryRatio = totalSkillPointsInCategory / maxSkillPointsInCategory;
-            // TODO: i.p.v. hack.SkillDifficulty haal je value eraf op basis van % skillpunten in zelfde skillcategory
-            if (selectedHack != null && (selectedHack.SkillDifficulty * categoryRatio) + selectedHack.BaseDifficulty <= succesChance)
+            double categoryCompletionRatio = totalSkillPointsInCategory / maxSkillPointsInCategory;
+            if (selectedHack != null && (selectedHack.SkillDifficulty * categoryCompletionRatio) + selectedHack.BaseDifficulty <= succesChance)
             {
                 isHackSucces = true;
             }
             return isHackSucces;
+        }
+
+        public void GivePlayerReward(int id, int playerId)
+        {
+            int rewardType = 0;
+            int rewardAmount = 0;
+            try
+            {
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("SELECT RewardTypeID, reward FROM Hack WHERE HackID = @HackID",conn))
+                    {
+                        cmd.Parameters.AddWithValue("@HackID", id);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                rewardType = (int)reader["RewardTypeID"];
+                                rewardAmount = (int)reader["reward"];
+                            }
+                        }
+                    }
+                }
+
+                switch (rewardType)
+                {
+                    case 1: // Money
+                        using (SqlConnection conn = _dbConnection.GetConnString())
+                        {
+                            conn.Open();
+                            using (SqlCommand cmd = new SqlCommand("UPDATE Player SET money = money + @rewardAmount WHERE PlayerID = @PlayerID", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@rewardAmount", rewardAmount);
+                                cmd.Parameters.AddWithValue("@PlayerID", playerId);
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
+                        break;
+                    case 2: // Skill Points
+                        using (SqlConnection conn = _dbConnection.GetConnString())
+                        {
+                            conn.Open();
+                            using (SqlCommand cmd = new SqlCommand("UPDATE Player SET skillPoints = skillPoints + @rewardAmount WHERE PlayerID = @PlayerID", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@rewardAmount", rewardAmount);
+                                cmd.Parameters.AddWithValue("@PlayerID", playerId);
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
+                        break;
+                    case 3: // Experience
+                        using (SqlConnection conn = _dbConnection.GetConnString())
+                        {
+                            conn.Open();
+                            using (SqlCommand cmd = new SqlCommand("UPDATE Player SET experience = experience + @rewardAmount WHERE PlayerID = @PlayerID", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@rewardAmount", rewardAmount);
+                                cmd.Parameters.AddWithValue("@PlayerID", playerId);
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
+                        break;
+                    default:
+                        Console.WriteLine("Default case");
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public List<Skill> GetPlayerSkills(int playerId)
+        {
+            List<Skill> playerSkills = new List<Skill>();
+            try
+            {
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("SELECT S.SkillID, S.name AS SkillName, S.description, PS.skillPoints, PS.maxSkillPoints, SC.name AS SkillCategoryName " +
+                                                           "FROM Skill S " +
+                                                           "INNER JOIN PlayerSkill PS ON PS.SkillID = S.SkillID " +
+                                                           "INNER JOIN SkillCategory SC ON SC.SkillCategoryID = S.SkillCategoryID " +
+                                                           "WHERE PS.PlayerId = @playerId", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@playerId", playerId);
+                        using(SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Skill skill = new Skill
+                                {
+                                    SkillId = (int) reader["SkillID"],
+                                    Name = (string) reader["SkillName"],
+                                    Description = (string) reader["description"],
+                                    SkillPoints = (int) reader["skillPoints"],
+                                    MaxSkillPoints = (int) reader["maxSkillPoints"],
+                                    SkillCategoryName = (string) reader["SkillCategoryName"]
+                                };
+                                playerSkills.Add(skill);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            return playerSkills;
+        }
+        public Player GetPlayerWithId(int playerId)
+        {
+            try
+            {
+                Player player = new Player();
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+                    using (SqlCommand cmd =
+                        new SqlCommand("SELECT P.*, R.name as RoleName " +
+                                       "FROM Player P " +
+                                       "INNER JOIN Role R ON R.RoleID = P.RoleID " +
+                                       "WHERE PlayerID = @PlayerID", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@PlayerID", playerId);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                player = new Player
+                                {
+                                    PlayerId = (int) reader["PlayerID"],
+                                    Username = (string) reader["username"],
+                                    Password = (string) reader["password"],
+                                    PlayerLevel = (int) reader["playerLevel"],
+                                    Experience = (decimal) reader["experience"],
+                                    SkillPoints = (int) reader["skillPoints"],
+                                    Money = (decimal) reader["money"],
+                                    Income = (decimal) reader["income"],
+                                    Energy = (int) reader["energy"],
+                                    RealName = reader["realName"]?.ToString(),
+                                    Country = reader["country"]?.ToString(),
+                                    City = reader["city"]?.ToString(),
+                                    Role = reader["RoleName"].ToString()
+                                };
+                            }
+                        }
+                    }
+                }
+                return player;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public Skill GetPlayerSkillWithId(int skillId, int playerId)
+        {
+            try
+            {
+                Skill skill = new Skill();
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("SELECT S.SkillID, S.name AS SkillName, S.description, PS.skillPoints, PS.maxSkillPoints, SC.name AS SkillCategoryName " +
+                                                           "FROM Skill S " +
+                                                           "INNER JOIN PlayerSkill PS ON PS.SkillID = S.SkillID " +
+                                                           "INNER JOIN SkillCategory SC ON SC.SkillCategoryID = S.SkillCategoryID " +
+                                                           "WHERE PS.PlayerId = @playerId " +
+                                                           "AND S.SkillID = @SkillID", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@SkillID", skillId);
+                        cmd.Parameters.AddWithValue("@PlayerID", playerId);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                skill = new Skill()
+                                {
+                                    SkillId = (int) reader["SkillID"],
+                                    Name = (string) reader["SkillName"],
+                                    Description = (string) reader["description"],
+                                    SkillPoints = (int) reader["skillPoints"],
+                                    MaxSkillPoints = (int) reader["maxSkillPoints"],
+                                    SkillCategoryName = (string) reader["SkillCategoryName"]
+                                };
+                            }
+                        }
+                    }
+                }
+                return skill;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }

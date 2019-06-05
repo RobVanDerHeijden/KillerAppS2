@@ -17,6 +17,9 @@ namespace Data.Interfaces
         List<Hack> GetAvailableHacks(int id);
 
         void UpdatePlayerLevels();
-        bool IsHackSuccessful(int hackId, int playerId);
+        bool PassedDifficultyCheck(int hackId, int playerId);
+        void GivePlayerReward(int id, int playerId);
+        List<Skill> GetPlayerSkills(int playerId);
+        Skill GetPlayerSkillWithId(int skillId, int playerId);
     }
 }

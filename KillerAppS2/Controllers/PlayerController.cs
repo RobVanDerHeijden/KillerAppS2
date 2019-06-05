@@ -16,9 +16,15 @@ namespace KillerAppS2.Controllers
         private readonly PlayerLogic _playerLogic = new PlayerLogic();
         public ActionResult Index()
         {
-            IEnumerable<Player> players = _playerLogic.GetPlayers();
+            if (HttpContext.Session.GetInt32("PlayerId") != null)
+            {
+                IEnumerable<Player> players = _playerLogic.GetPlayers();
 
-            return View(players);
+                return View(players);
+            }
+            // Else
+            TempData["LoginError"] = "You are not logged in. Please log in and try again";
+            return RedirectToAction("Login");
         }
 
         public IActionResult Login()
@@ -49,7 +55,7 @@ namespace KillerAppS2.Controllers
             }
             else
             {
-                ViewData["LoginError"] = "Your login attempt was not successful. Please try again";
+                TempData["LoginError"] = "Your login attempt was not successful. Please try again";
                 return View(user);
             }
             return RedirectToAction("PlayerDashBoard");
@@ -62,7 +68,7 @@ namespace KillerAppS2.Controllers
                 return View();
             }
             // Else
-            ViewData["LoginError"] = "You are not logged in. Please log in and try again";
+            TempData["LoginError"] = "You are not logged in. Please log in and try again";
             return RedirectToAction("Login");
         }
 
@@ -74,24 +80,36 @@ namespace KillerAppS2.Controllers
 
         public IActionResult PlayersWithoutGang()
         {
-            PlayerViewModel PVmodel = new PlayerViewModel();
-            PVmodel.Players = _playerLogic.GetPlayersWithoutGang();
+            if (HttpContext.Session.GetInt32("PlayerId") != null)
+            {
+                PlayerViewModel PVmodel = new PlayerViewModel();
+                PVmodel.Players = _playerLogic.GetPlayersWithoutGang();
 
-            return View(PVmodel);
+                return View(PVmodel);
+            }
+            // Else
+            TempData["LoginError"] = "You are not logged in. Please log in and try again";
+            return RedirectToAction("Login");
         }
 
         public IActionResult Hacks()
         {
-            int playerLevel = 0;
-            if (HttpContext.Session.GetInt32("PlayerLevel") != null)
+            if (HttpContext.Session.GetInt32("PlayerId") != null)
             {
-                playerLevel = (int) HttpContext.Session.GetInt32("PlayerLevel");
+                int playerLevel = 0;
+                if (HttpContext.Session.GetInt32("PlayerLevel") != null)
+                {
+                    playerLevel = (int)HttpContext.Session.GetInt32("PlayerLevel");
+                }
+
+                HackViewModel HVmodel = new HackViewModel();
+                HVmodel.Hacks = _playerLogic.GetAvailableHacks(playerLevel);
+
+                return View(HVmodel);
             }
-
-            HackViewModel HVmodel = new HackViewModel();
-            HVmodel.Hacks = _playerLogic.GetAvailableHacks(playerLevel);
-
-            return View(HVmodel);
+            // Else
+            TempData["LoginError"] = "You are not logged in. Please log in and try again";
+            return RedirectToAction("Login");
         }
 
         public IActionResult DoHack(int id)
@@ -100,23 +118,72 @@ namespace KillerAppS2.Controllers
             if (HttpContext.Session.GetInt32("PlayerId") != null)
             {
                 playerId = (int)HttpContext.Session.GetInt32("PlayerId");
-
-                
             }
             // check if succes (based on difficulty and skill in category)
-            if (_playerLogic.IsHackSuccessful(id, playerId))
+            if (_playerLogic.IsHackSuccessful(id, playerId)) // TODO: Need to check if there is enough energy
             {
-                // update/add experience/reward + clear/refresh levels
+                _playerLogic.GivePlayerReward(id, playerId);
+                //_playerLogic.ConsumeEnergy(id, playerId);
                 _playerLogic.UpdatePlayerLevels();
+                //_playerLogic.UpdatePlayerHackStats(id, playerId);
 
-                ViewData["HackCompleteNotice"] = "Hack was a succes!";
+                //HttpContext.Session.SetString("Money", player.Money.ToString());
+                // UPDATE PLAYER STATS SESSIONS
+                TempData["HackCompleteNotice"] = "Hack was a succes!";
             }
             else
             {
-                ViewData["HackCompleteNotice"] = "Hack was a failure!";
+                TempData["HackCompleteNotice"] = "Hack was a failure!";
             }
-            
+
             return RedirectToAction(actionName: "Hacks", controllerName: "Player");
+        }
+
+        public IActionResult Skills()
+        {
+            if (HttpContext.Session.GetInt32("PlayerId") != null)
+            {
+                int playerId = 0;
+                if (HttpContext.Session.GetInt32("PlayerLevel") != null)
+                {
+                    playerId = (int)HttpContext.Session.GetInt32("PlayerId");
+                }
+
+                SkillViewModel SVmodel = new SkillViewModel();
+                SVmodel.Skills = _playerLogic.GetPlayerSkills(playerId);
+
+                return View(SVmodel);
+            }
+            // Else
+            TempData["LoginError"] = "You are not logged in. Please log in and try again";
+            return RedirectToAction("Login");
+        }
+
+        public IActionResult UpgradeSkill(int id)
+        {
+            int playerId = 0;
+            if (HttpContext.Session.GetInt32("PlayerId") != null)
+            {
+                playerId = (int)HttpContext.Session.GetInt32("PlayerId");
+            }
+            // check if succes (based on difficulty and skill in category)
+            if (_playerLogic.UpgradeSkill(id, playerId)) // TODO: Need to check if there is enough energy
+            {
+                _playerLogic.GivePlayerReward(id, playerId);
+                //_playerLogic.ConsumeEnergy(id, playerId);
+                _playerLogic.UpdatePlayerLevels();
+                //_playerLogic.UpdatePlayerHackStats(id, playerId);
+
+                //HttpContext.Session.SetString("Money", player.Money.ToString());
+                // UPDATE PLAYER STATS SESSIONS
+                TempData["SkillUpgradeNotice"] = "Skill is upgraded!";
+            }
+            else
+            {
+                TempData["SkillUpgradeNotice"] = "Skill could not be upgraded!";
+            }
+
+            return RedirectToAction(actionName: "Skills", controllerName: "Player");
         }
     }
 }

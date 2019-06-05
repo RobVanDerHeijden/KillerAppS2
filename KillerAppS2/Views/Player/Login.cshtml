@@ -7,10 +7,10 @@
 <h2>Login</h2>
 @Html.AntiForgeryToken()  
 @Html.ValidationSummary(true)  
-@if (@ViewData["LoginError"] != null)  
+@if (TempData["LoginError"] != null)  
 {  
     <div style="border: 1px solid red">  
-        @ViewData["LoginError"]
+        @TempData["LoginError"]
     </div>  
 } 
 <div class="row">
