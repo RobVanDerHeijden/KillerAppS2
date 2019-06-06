@@ -41,16 +41,17 @@ namespace KillerAppS2.Controllers
                 Player player = _playerLogic.Login(user.Username, user.Password);
                 if (player != null)
                 {
-                    HttpContext.Session.SetInt32("PlayerId", player.PlayerId);
-                    HttpContext.Session.SetString("Role", player.Role);
-                    // Displayable information
-                    HttpContext.Session.SetString("Username", player.Username);
-                    HttpContext.Session.SetInt32("PlayerLevel", player.PlayerLevel);
-                    HttpContext.Session.SetString("Experience", player.Experience.ToString());
-                    HttpContext.Session.SetString("Money", player.Money.ToString());
-                    HttpContext.Session.SetString("Income", player.Income.ToString());
-                    HttpContext.Session.SetString("SkillPoints", player.SkillPoints.ToString());
-                    HttpContext.Session.SetString("Energy", player.Energy.ToString());
+                    UpdatePlayerDisplayableInformation(player.PlayerId);
+                    //HttpContext.Session.SetInt32("PlayerId", player.PlayerId);
+                    //HttpContext.Session.SetString("Role", player.Role);
+                    //// Displayable information
+                    //HttpContext.Session.SetString("Username", player.Username);
+                    //HttpContext.Session.SetInt32("PlayerLevel", player.PlayerLevel);
+                    //HttpContext.Session.SetString("Experience", player.Experience.ToString());
+                    //HttpContext.Session.SetString("Money", player.Money.ToString());
+                    //HttpContext.Session.SetString("Income", player.Income.ToString());
+                    //HttpContext.Session.SetString("SkillPoints", player.SkillPoints.ToString());
+                    //HttpContext.Session.SetString("Energy", player.Energy.ToString());
                 }
             }
             else
@@ -127,13 +128,12 @@ namespace KillerAppS2.Controllers
                 _playerLogic.UpdatePlayerLevels();
                 //_playerLogic.UpdatePlayerHackStats(id, playerId);
 
-                //HttpContext.Session.SetString("Money", player.Money.ToString());
-                // UPDATE PLAYER STATS SESSIONS
-                TempData["HackCompleteNotice"] = "Hack was a succes!";
+                UpdatePlayerDisplayableInformation(playerId);
+                TempData["HackCompleteNotice"] = "succes"; // TODO: Add the random number / what it needed to hit + Checkmark eg.: 74 / 15
             }
             else
             {
-                TempData["HackCompleteNotice"] = "Hack was a failure!";
+                TempData["HackCompleteNotice"] = "failure";
             }
 
             return RedirectToAction(actionName: "Hacks", controllerName: "Player");
@@ -167,23 +167,40 @@ namespace KillerAppS2.Controllers
                 playerId = (int)HttpContext.Session.GetInt32("PlayerId");
             }
             // check if succes (based on difficulty and skill in category)
-            if (_playerLogic.UpgradeSkill(id, playerId)) // TODO: Need to check if there is enough energy
+            if (_playerLogic.UpgradeSkill(id, playerId))
             {
-                _playerLogic.GivePlayerReward(id, playerId);
-                //_playerLogic.ConsumeEnergy(id, playerId);
-                _playerLogic.UpdatePlayerLevels();
-                //_playerLogic.UpdatePlayerHackStats(id, playerId);
+                TempData["SkillUpgradeNotice"] = "succes";
 
-                //HttpContext.Session.SetString("Money", player.Money.ToString());
-                // UPDATE PLAYER STATS SESSIONS
-                TempData["SkillUpgradeNotice"] = "Skill is upgraded!";
+                UpdatePlayerDisplayableInformation(playerId);
             }
             else
             {
-                TempData["SkillUpgradeNotice"] = "Skill could not be upgraded!";
+                TempData["SkillUpgradeNotice"] = "failure";
             }
 
             return RedirectToAction(actionName: "Skills", controllerName: "Player");
+        }
+
+        // Helper Methods
+        public void UpdatePlayerDisplayableInformation(int playerId)
+        {
+            Player player = _playerLogic.GetPlayerWithId(playerId);
+            // Validation Data
+            HttpContext.Session.SetInt32("PlayerId", player.PlayerId);
+            HttpContext.Session.SetString("Role", player.Role);
+            // Displayable Data
+            HttpContext.Session.SetString("Username", player.Username);
+            HttpContext.Session.SetInt32("PlayerLevel", player.PlayerLevel);
+            HttpContext.Session.SetString("Experience", player.Experience.ToString());
+            HttpContext.Session.SetString("Money", player.Money.ToString());
+            HttpContext.Session.SetString("Income", player.Income.ToString());
+            HttpContext.Session.SetString("SkillPoints", player.SkillPoints.ToString());
+            HttpContext.Session.SetString("Energy", player.Energy.ToString());
+        }
+
+        public IActionResult RefillEnergy()
+        {
+            return View("PlayerDashBoard");
         }
     }
 }

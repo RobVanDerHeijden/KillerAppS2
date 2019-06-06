@@ -9,6 +9,7 @@ namespace Data.Repositorys
 {
     public class PlayerRepository
     {
+        // TODO: Remove this repository once I have removed all reliances for this
         private readonly IPlayerContext _iplayerContext;
 
         public PlayerRepository()

@@ -5,9 +5,14 @@
 }
 
 <h2>Hacks</h2>
-@if (TempData["HackCompleteNotice"] != null)
+@if ((string)TempData["HackCompleteNotice"] == "succes")
 {
-    <p>@TempData["HackCompleteNotice"]</p>
+    <p class="notice-succes-status">Hack was a success! <i class="fas fa-check-circle"></i></p>
+        
+}
+else if ((string)TempData["HackCompleteNotice"] == "failure")
+{
+    <p class="notice-failure-status">Hack was a failure! <i class="fas fa-times-circle"></i></p>
 }
 <table class="table">
     <thead>

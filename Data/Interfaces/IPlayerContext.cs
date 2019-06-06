@@ -5,7 +5,6 @@ namespace Data.Interfaces
 {
     public interface IPlayerContext
     {
-        int GetLevel(int playerId);
         List<Player> GetPlayers();
         List<Player> GetPlayersWithoutGang();
         Player GetPlayerWithId(int id);
@@ -21,5 +20,7 @@ namespace Data.Interfaces
         void GivePlayerReward(int id, int playerId);
         List<Skill> GetPlayerSkills(int playerId);
         Skill GetPlayerSkillWithId(int skillId, int playerId);
+        void UpdatePlayerSkill(int skillId, int playerId);
+        void LowerPlayerSkillPoints(int playerId);
     }
 }

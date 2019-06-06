@@ -11,6 +11,8 @@ namespace Data.Context.SQL
 {
     public class PlayerSqlContext : IPlayerContext
     {
+        // TODO: Remove all throws in the catches
+        // TODO: Rewrite catch exeption message to be less technical and more user friendly
         private readonly DBConnection _dbConnection = new DBConnection();
 
         //public PlayerSqlContext(IPlayerContext config)
@@ -20,10 +22,6 @@ namespace Data.Context.SQL
         //    // Use myStringValue
         //}
 
-        public int GetLevel(int playerId)
-        {
-            throw new System.NotImplementedException();
-        }
 
         public List<Player> GetPlayers()
         {
@@ -112,9 +110,7 @@ namespace Data.Context.SQL
                 throw;
             }
         }
-
         
-
         public void UpdatePlayer(Player player)
         {
             throw new System.NotImplementedException();
@@ -181,7 +177,7 @@ namespace Data.Context.SQL
         }
 
         // Returns List of Hacks available for player based on his level || Parameter id = playerLevel
-        public List<Hack> GetAvailableHacks(int id)
+        public List<Hack> GetAvailableHacks(int minimalLevel)
         {
             try
             {
@@ -196,7 +192,7 @@ namespace Data.Context.SQL
                                        "INNER JOIN SkillCategory SC ON SC.SkillCategoryID = H.SkillCategoryID " +
                                        "WHERE minimalLevel <= @id;", conn))
                     {
-                        cmd.Parameters.AddWithValue("@id", id);
+                        cmd.Parameters.AddWithValue("@id", minimalLevel);
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
@@ -314,12 +310,6 @@ namespace Data.Context.SQL
                                 }
                             }
                         }
-
-                        // TODO: Check here if  thre is enaugh energy
-                        //using (SqlCommand cmdEnergy = new SqlCommand("", conn))
-                        //{
-
-                        //}
                     }
                 }
             }
@@ -337,7 +327,7 @@ namespace Data.Context.SQL
             return isHackSucces;
         }
 
-        public void GivePlayerReward(int id, int playerId)
+        public void GivePlayerReward(int hackId, int playerId)
         {
             int rewardType = 0;
             int rewardAmount = 0;
@@ -348,7 +338,7 @@ namespace Data.Context.SQL
                     conn.Open();
                     using (SqlCommand cmd = new SqlCommand("SELECT RewardTypeID, reward FROM Hack WHERE HackID = @HackID",conn))
                     {
-                        cmd.Parameters.AddWithValue("@HackID", id);
+                        cmd.Parameters.AddWithValue("@HackID", hackId);
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
@@ -534,6 +524,55 @@ namespace Data.Context.SQL
                     }
                 }
                 return skill;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public void UpdatePlayerSkill(int skillId, int playerId)
+        {
+            try
+            {
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("UPDATE PlayerSkill SET skillPoints = skillPoints + 1 WHERE PlayerID = @PlayerID AND SkillID = @SkillID", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@SkillID", skillId);
+                        cmd.Parameters.AddWithValue("@PlayerID", playerId);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public void LowerPlayerSkillPoints(int playerId)
+        {
+            try
+            {
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+
+                    using (SqlCommand cmd = 
+                        new SqlCommand("UPDATE Player " +
+                                       "SET skillPoints = skillPoints - 1 " +
+                                       "WHERE PlayerID = @PlayerID", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@PlayerID", playerId);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
             }
             catch (Exception e)
             {

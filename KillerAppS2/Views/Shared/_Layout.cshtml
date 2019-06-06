@@ -34,7 +34,6 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    @*<li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>*@
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                     @if (Context.Session.GetString("Role") == "Admin")
@@ -42,10 +41,6 @@
                         <li><a asp-area="" asp-controller="Player" asp-action="Index">Player</a></li>
                         <li><a asp-area="" asp-controller="Gang" asp-action="Index">Gang</a></li>
                     }
-                    @*@if (Context.Session.GetString("Role") == "Player")
-                    {
-                        <li><a asp-area="" asp-controller="Player" asp-action="MyGang">MyGang</a></li>
-                    }*@
                 </ul>
                 <ul class="nav navbar-nav login-links">
                     @if (Context.Session.GetString("Username") != null)
@@ -80,12 +75,14 @@
                         <p>Experience: @Context.Session.GetString("Experience")</p>
                         <p>Money: @Context.Session.GetString("Money")</p>
                         <p>Income: @Context.Session.GetString("Income")</p>
-                        <p>Skill Points: @Context.Session.GetString("SkillPoints")</p>
+                        <p id="skill-points-display">Skill Points: @Context.Session.GetString("SkillPoints")</p>
 
                         <p>Energy: @Context.Session.GetString("Energy") / (maxenergy)</p>
                         <div class="bunky-round-xlarge">
                             <div class="bunky-container bunky-blue bunky-round-xlarge bunky-bar-energy" style="width:25%"></div>
                         </div>
+                        <p><a asp-area="" asp-controller="Player" asp-action="RefillEnergy"><i class="fas fa-bolt"></i>Refill Energy</a></p>
+
                     </div>
                 </div>
 

@@ -95,3 +95,11 @@ body {
     color: #fff;
     background-color: #424242;
 }
+
+/* Body */
+.notice-succes-status {
+    color: greenyellow;
+}
+.notice-failure-status {
+    color: chocolate;
+}
