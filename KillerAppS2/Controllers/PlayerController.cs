@@ -14,6 +14,7 @@ namespace KillerAppS2.Controllers
     {
 
         private readonly PlayerLogic _playerLogic = new PlayerLogic();
+
         public ActionResult Index()
         {
             if (HttpContext.Session.GetInt32("PlayerId") != null)
@@ -22,6 +23,7 @@ namespace KillerAppS2.Controllers
 
                 return View(players);
             }
+
             // Else
             TempData["LoginError"] = "You are not logged in. Please log in and try again";
             return RedirectToAction("Login");
@@ -49,19 +51,21 @@ namespace KillerAppS2.Controllers
                 TempData["LoginError"] = "Your login attempt was not successful. Please try again";
                 return View(user);
             }
+
             return RedirectToAction("PlayerDashBoard");
         }
 
-        public ActionResult PlayerDashBoard()
-        {
-            if (HttpContext.Session.GetInt32("PlayerId") != null)
-            {
-                return View();
-            }
-            // Else
-            TempData["LoginError"] = "You are not logged in. Please log in and try again";
-            return RedirectToAction("Login");
-        }
+        //public ActionResult PlayerDashBoard()
+        //{
+        //    if (HttpContext.Session.GetInt32("PlayerId") != null)
+        //    {
+        //        return View();
+        //    }
+
+        //    // Else
+        //    TempData["LoginError"] = "You are not logged in. Please log in and try again";
+        //    return RedirectToAction("Login");
+        //}
 
         public IActionResult Logout()
         {
@@ -78,6 +82,7 @@ namespace KillerAppS2.Controllers
 
                 return View(PVmodel);
             }
+
             // Else
             TempData["LoginError"] = "You are not logged in. Please log in and try again";
             return RedirectToAction("Login");
@@ -90,7 +95,7 @@ namespace KillerAppS2.Controllers
                 int playerLevel = 0;
                 if (HttpContext.Session.GetInt32("PlayerLevel") != null)
                 {
-                    playerLevel = (int)HttpContext.Session.GetInt32("PlayerLevel");
+                    playerLevel = (int) HttpContext.Session.GetInt32("PlayerLevel");
                 }
 
                 HackViewModel HVmodel = new HackViewModel();
@@ -98,6 +103,7 @@ namespace KillerAppS2.Controllers
 
                 return View(HVmodel);
             }
+
             // Else
             TempData["LoginError"] = "You are not logged in. Please log in and try again";
             return RedirectToAction("Login");
@@ -108,9 +114,9 @@ namespace KillerAppS2.Controllers
             int playerId = 0;
             if (HttpContext.Session.GetInt32("PlayerId") != null)
             {
-                playerId = (int)HttpContext.Session.GetInt32("PlayerId");
+                playerId = (int) HttpContext.Session.GetInt32("PlayerId");
             }
-            
+
             if (_playerLogic.HasEnoughEnergy(id, playerId))
             {
                 // check if hack is succes (based on difficulty and skill in category)
@@ -118,7 +124,8 @@ namespace KillerAppS2.Controllers
                 {
                     _playerLogic.GivePlayerReward(id, playerId);
                     _playerLogic.UpdatePlayerHackStats(id, playerId, true);
-                    _playerLogic.UpdatePlayerLevels();
+                    _playerLogic.UpdateSinglePlayerLevel(playerId);
+                    //_playerLogic.UpdatePlayerLevels();
 
                     UpdatePlayerDisplayableInformation(playerId);
                     TempData["HackCompleteNotice"] = "succes";
@@ -134,7 +141,7 @@ namespace KillerAppS2.Controllers
             {
                 TempData["HackCompleteNotice"] = "notEnoughEnergy";
             }
-            
+
 
             return RedirectToAction(actionName: "Hacks", controllerName: "Player");
         }
@@ -146,7 +153,7 @@ namespace KillerAppS2.Controllers
                 int playerId = 0;
                 if (HttpContext.Session.GetInt32("PlayerLevel") != null)
                 {
-                    playerId = (int)HttpContext.Session.GetInt32("PlayerId");
+                    playerId = (int) HttpContext.Session.GetInt32("PlayerId");
                 }
 
                 SkillViewModel SVmodel = new SkillViewModel();
@@ -154,6 +161,7 @@ namespace KillerAppS2.Controllers
 
                 return View(SVmodel);
             }
+
             // Else
             TempData["LoginError"] = "You are not logged in. Please log in and try again";
             return RedirectToAction("Login");
@@ -164,8 +172,9 @@ namespace KillerAppS2.Controllers
             int playerId = 0;
             if (HttpContext.Session.GetInt32("PlayerId") != null)
             {
-                playerId = (int)HttpContext.Session.GetInt32("PlayerId");
+                playerId = (int) HttpContext.Session.GetInt32("PlayerId");
             }
+
             // check if succes (based on difficulty and skillpoints in category)
             if (_playerLogic.UpgradeSkill(id, playerId))
             {
@@ -194,7 +203,8 @@ namespace KillerAppS2.Controllers
             HttpContext.Session.SetString("Username", player.Username);
             HttpContext.Session.SetInt32("PlayerLevel", player.PlayerLevel);
             HttpContext.Session.SetString("Experience", player.Experience.ToString());
-            HttpContext.Session.SetString("ExperienceNeededForNextLevel", player.ExperienceNeededForNextLevel.ToString());
+            HttpContext.Session.SetString("ExperienceNeededForNextLevel",
+                player.ExperienceNeededForNextLevel.ToString());
             HttpContext.Session.SetString("Money", player.Money.ToString());
             HttpContext.Session.SetString("Income", player.Income.ToString());
             HttpContext.Session.SetString("SkillPoints", player.SkillPoints.ToString());
@@ -209,12 +219,13 @@ namespace KillerAppS2.Controllers
             int playerId = 0;
             if (HttpContext.Session.GetInt32("PlayerId") != null)
             {
-                playerId = (int)HttpContext.Session.GetInt32("PlayerId");
+                playerId = (int) HttpContext.Session.GetInt32("PlayerId");
             }
 
             if (_playerLogic.UpdatePlayerEnergy(playerId))
             {
-                _playerLogic.UpdatePlayerLevels();
+                //_playerLogic.UpdatePlayerLevels();
+                _playerLogic.UpdateSinglePlayerLevel(playerId);
                 UpdatePlayerDisplayableInformation(playerId);
                 TempData["EnergyCompleteNotice"] = "succes";
             }
@@ -222,10 +233,34 @@ namespace KillerAppS2.Controllers
             {
                 TempData["EnergyCompleteNotice"] = "failure";
             }
-            return View("PlayerDashBoard");
+            PlayerViewModel PVmodel = new PlayerViewModel();
+            PVmodel.Player = _playerLogic.GetPlayerWithId(playerId);
+            
+            return View("PlayerDashBoard", PVmodel);
         }
-        
+
         public IActionResult Achievements()
+        {
+            if (HttpContext.Session.GetInt32("PlayerId") != null)
+            {
+                int playerId = 0;
+                if (HttpContext.Session.GetInt32("PlayerLevel") != null)
+                {
+                    playerId = (int) HttpContext.Session.GetInt32("PlayerId");
+                }
+
+                AchievementViewModel AVmodel = new AchievementViewModel();
+                AVmodel.Achievements = _playerLogic.GetPlayerAchievements(playerId);
+
+                return View(AVmodel);
+            }
+
+            // Else
+            TempData["LoginError"] = "You are not logged in. Please log in and try again";
+            return RedirectToAction("Login");
+        }
+
+        public IActionResult PlayerDashBoard()
         {
             if (HttpContext.Session.GetInt32("PlayerId") != null)
             {
@@ -235,11 +270,73 @@ namespace KillerAppS2.Controllers
                     playerId = (int)HttpContext.Session.GetInt32("PlayerId");
                 }
 
+                PlayerViewModel PVmodel = new PlayerViewModel();
+                PVmodel.Player = _playerLogic.GetPlayerWithId(playerId);
+
+                return View(PVmodel);
+            }
+
+            // Else
+            TempData["LoginError"] = "You are not logged in. Please log in and try again";
+            return RedirectToAction("Login");
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult PlayerDashBoard(int id, IFormCollection form)
+        {
+            int playerId = 0;
+            if (HttpContext.Session.GetInt32("PlayerId") != null)
+            {
+                playerId = (int) HttpContext.Session.GetInt32("PlayerId");
+            }
+            Player player = new Player()
+            {
+                PlayerId = playerId,
+                Username = form["Player.Username"],
+                Password = form["Player.Password"],
+                RealName = form["Player.RealName"],
+                Country = form["Player.Country"],
+                City = form["Player.City"]
+            };
+
+            _playerLogic.UpdatePlayerData(player);
+            return RedirectToAction("Index");
+        }
+
+
+
+        public IActionResult DetailsPlayer(int id)
+        {
+            if (HttpContext.Session.GetInt32("PlayerId") != null)
+            {
+                PlayerViewModel PVmodel = new PlayerViewModel();
+                PVmodel.Player = _playerLogic.GetPlayerWithId(id);
+
+                return View(PVmodel);
+            }
+
+            // Else
+            TempData["LoginError"] = "You are not logged in. Please log in and try again";
+            return RedirectToAction("Login");
+        }
+
+        public IActionResult PlayerAchievements()
+        {
+            if (HttpContext.Session.GetInt32("PlayerId") != null)
+            {
+                //int playerId = 0;
+                //if (HttpContext.Session.GetInt32("PlayerLevel") != null)
+                //{
+                //    playerId = (int)HttpContext.Session.GetInt32("PlayerId");
+                //}
+
                 AchievementViewModel AVmodel = new AchievementViewModel();
-                AVmodel.Achievements = _playerLogic.GetPlayerAchievements(playerId);
+                AVmodel.Achievements = _playerLogic.GetAllPlayersAchievements();
 
                 return View(AVmodel);
             }
+
             // Else
             TempData["LoginError"] = "You are not logged in. Please log in and try again";
             return RedirectToAction("Login");

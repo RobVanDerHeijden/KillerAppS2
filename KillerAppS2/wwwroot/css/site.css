@@ -37,7 +37,7 @@ body {
 }
 /***************************************************/
 /* Login Links */
-.login-links {
+ul.login-links {
     float: right;
 }
 
@@ -139,7 +139,7 @@ body {
 
 /* Table for Lists */
 .table-list-style-bunky th {
-    color:#D5DDE5;;
+    color:#D5DDE5;
     background:#1b1e24;
     border-bottom:4px solid #9ea7af;
     font-size:23px;

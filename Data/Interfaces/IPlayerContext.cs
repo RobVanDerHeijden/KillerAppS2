@@ -27,5 +27,8 @@ namespace Data.Interfaces
         bool HasEnoughEnergy(int id, int playerId);
         List<Achievement> GetPlayerAchievements(int playerId);
         void UpdatePlayerHackStats(int id, int playerId, bool isSucces);
+        void UpdateSinglePlayerLevel(int playerId);
+        void UpdatePlayerData(Player player);
+        List<Achievement> GetAllPlayersAchievements();
     }
 }

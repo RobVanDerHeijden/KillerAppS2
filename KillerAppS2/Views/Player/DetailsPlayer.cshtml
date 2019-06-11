@@ -1,0 +1,59 @@
+﻿@model PlayerViewModel
+
+@{
+    ViewData["Title"] = "DetailsPlayer";
+}
+
+<h2>DetailsPlayer</h2>
+
+<div>
+    <h4>Player</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Player.Username)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Player.Username)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Player.PlayerLevel)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Player.PlayerLevel)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Player.Experience)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Player.Experience)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Player.Money)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Player.Money)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Player.RealName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Player.RealName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Player.Country)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Player.Country)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Player.City)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Player.City)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

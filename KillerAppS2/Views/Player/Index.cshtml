@@ -6,9 +6,9 @@
 
 <h2>Index</h2>
 
-<p>
+@*<p>
     <a asp-action="PlayersWithoutGang">Players Without Gang</a>
-</p>
+</p>*@
 <table class="table">
     <thead>
         <tr>
@@ -44,9 +44,9 @@
                     @Html.DisplayFor(modelItem => player.Experience)
                 </td>
                 <td>
-                    @Html.ActionLink("Details", "DetailsPlayer", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "DetailsPlayer", new {  id=player.PlayerId }) @*|
                     @Html.ActionLink("Add as Friend", "AddPlayerAsFriend", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Add as Enemy", "AddPlayerAsEnemy", new { /* id=item.PrimaryKey */ })
+                    @Html.ActionLink("Add as Enemy", "AddPlayerAsEnemy", new { /* id=item.PrimaryKey */ })*@
                 </td>
             </tr>
         }

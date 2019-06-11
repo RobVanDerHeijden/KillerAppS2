@@ -489,9 +489,7 @@ namespace Data.Context.SQL
                                 };
                                 int nextLevel = player.PlayerLevel+1;
                                 player.ExperienceNeededForNextLevel = (int) Math.Pow((nextLevel * 5), 2);
-                                
                             }
-
                         }
                     }
 
@@ -771,7 +769,7 @@ namespace Data.Context.SQL
                     conn.Open();
                     if (isSucces)
                     {
-                        // TODO: add moneygained
+                        // TODO: add moneygained stat
                         using (SqlCommand cmd = new SqlCommand("UPDATE PlayerHack SET timesSucces = timesSucces + 1 WHERE PlayerID = @PlayerID AND HackID = @HackID", conn))
                         {
                             cmd.Parameters.AddWithValue("@HackID", id);
@@ -789,8 +787,6 @@ namespace Data.Context.SQL
                             cmd.ExecuteNonQuery();
                         }
                     }
-
-                    
                 }
             }
             catch (Exception e)
@@ -798,6 +794,103 @@ namespace Data.Context.SQL
                 Console.WriteLine(e);
                 throw;
             }
+        }
+
+        // STORED PROCEDURE: dbo.calcLevelOnePlayer
+        public void UpdateSinglePlayerLevel(int playerId)
+        {
+            try
+            {
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand(
+                        "dbo.calcLevelOnePlayer", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@PlayerID", playerId);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Console.WriteLine(reader["experience"]);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public void UpdatePlayerData(Player player)
+        {
+            try
+            {
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("UPDATE Player " +
+                                                           "SET username = @Username, password = @Password, realName = @RealName, country = @Country, city = @City " +
+                                                           "WHERE PlayerID = @playerId", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@playerId", player.PlayerId);
+                        cmd.Parameters.AddWithValue("@Username", player.Username);
+                        cmd.Parameters.AddWithValue("@Password", player.Password);
+                        cmd.Parameters.AddWithValue("@RealName", player.RealName);
+                        cmd.Parameters.AddWithValue("@Country", player.Country);
+                        cmd.Parameters.AddWithValue("@City", player.City);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public List<Achievement> GetAllPlayersAchievements()
+        {
+            List<Achievement> playerAchievements = new List<Achievement>();
+            try
+            {
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("SELECT A.name AS AchievementName, P.username AS PlayerName,  PA.dateAchieved " +
+                                                           "FROM Player P " +
+                                                           "LEFT JOIN PlayerAchievement PA ON PA.PlayerID = P.PlayerID " +
+                                                           "RIGHT JOIN Achievement A ON A.AchievementID = PA.AchievementID " +
+                                                           "ORDER BY A.AchievementID ASC, PA.dateAchieved ASC; ", conn))
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Achievement achievement = new Achievement
+                                {
+                                    AchievementName = (string)reader["AchievementName"],
+                                    PlayerName = reader["PlayerName"]?.ToString(),
+                                    DateAchieved = reader["dateAchieved"] as DateTime?
+                                };
+                                playerAchievements.Add(achievement);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            return playerAchievements;
         }
     }
 }

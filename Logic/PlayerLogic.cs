@@ -87,12 +87,16 @@ namespace Logic
         public bool UpdatePlayerEnergy(int playerId)
         {
             Player player = _iplayerContext.GetPlayerWithId(playerId);
+
+            // Difference between now and LastTimeEnergyRefilled
             DateTime startTime = player.LastTimeEnergyRefilled;
             DateTime endTime = DateTime.Now;
-
             double timeDiffInMinutes = endTime.Subtract(startTime).TotalMinutes;
 
+            // For every 5 mins in difference, add energyRegen(default = 5)
             player.RefillableEnergy += (int) Math.Floor((timeDiffInMinutes / 5)) * player.EnergyRegen;
+
+            // Handeling of exess Energy and updating the new Energy
             if (player.RefillableEnergy > 0 && 
                 player.Energy < player.MaxEnergy)
             {
@@ -107,8 +111,6 @@ namespace Logic
                     excessEnergy = 0;
                     _iplayerContext.UpdatePlayerEnergy(player.PlayerId, excessEnergy, player.Energy + player.RefillableEnergy);
                 }
-                
-
                 return true;
             }
             return false;
@@ -127,6 +129,22 @@ namespace Logic
         public void UpdatePlayerHackStats(int id, int playerId, bool isSucces)
         {
             _iplayerContext.UpdatePlayerHackStats(id, playerId, isSucces);
+        }
+
+        public void UpdateSinglePlayerLevel(int playerId)
+        {
+            Player player = _iplayerContext.GetPlayerWithId(playerId);
+            _iplayerContext.UpdateSinglePlayerLevel(playerId);
+        }
+
+        public void UpdatePlayerData(Player player)
+        {
+            _iplayerContext.UpdatePlayerData(player);
+        }
+
+        public List<Achievement> GetAllPlayersAchievements()
+        {
+            return _iplayerContext.GetAllPlayersAchievements();
         }
     }
 }

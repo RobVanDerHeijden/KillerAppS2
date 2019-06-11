@@ -7,7 +7,9 @@ namespace Model
         public int AchievementId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public DateTime DateAchieved { get; set; }
+        public DateTime? DateAchieved { get; set; }
+        public string AchievementName { get; set; }
+        public string PlayerName { get; set; }
 
         public Achievement()
         {
