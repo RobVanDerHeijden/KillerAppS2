@@ -118,5 +118,15 @@ namespace Logic
         {
             return _iplayerContext.HasEnoughEnergy(id, playerId);
         }
+
+        public List<Achievement> GetPlayerAchievements(int playerId)
+        {
+            return _iplayerContext.GetPlayerAchievements(playerId);
+        }
+
+        public void UpdatePlayerHackStats(int id, int playerId, bool isSucces)
+        {
+            _iplayerContext.UpdatePlayerHackStats(id, playerId, isSucces);
+        }
     }
 }

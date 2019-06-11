@@ -9,7 +9,7 @@ namespace Data.Repositorys
     public class GangRepository
     {
         private readonly IGangContext _igangContext;
-        private readonly IPlayerContext _iplayerContext;
+        //private readonly IPlayerContext _iplayerContext;
 
         public GangRepository()
         {

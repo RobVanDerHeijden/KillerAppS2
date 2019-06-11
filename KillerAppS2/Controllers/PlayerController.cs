@@ -110,13 +110,14 @@ namespace KillerAppS2.Controllers
             {
                 playerId = (int)HttpContext.Session.GetInt32("PlayerId");
             }
-            // check if succes (based on difficulty and skill in category)
+            
             if (_playerLogic.HasEnoughEnergy(id, playerId))
             {
-                if (_playerLogic.IsHackSuccessful(id, playerId)) // TODO: Need to check if there is enough energy
+                // check if hack is succes (based on difficulty and skill in category)
+                if (_playerLogic.IsHackSuccessful(id, playerId))
                 {
                     _playerLogic.GivePlayerReward(id, playerId);
-                    //_playerLogic.UpdatePlayerHackStats(id, playerId);
+                    _playerLogic.UpdatePlayerHackStats(id, playerId, true);
                     _playerLogic.UpdatePlayerLevels();
 
                     UpdatePlayerDisplayableInformation(playerId);
@@ -124,6 +125,8 @@ namespace KillerAppS2.Controllers
                 }
                 else
                 {
+                    _playerLogic.UpdatePlayerHackStats(id, playerId, false);
+                    UpdatePlayerDisplayableInformation(playerId);
                     TempData["HackCompleteNotice"] = "failure";
                 }
             }
@@ -221,7 +224,25 @@ namespace KillerAppS2.Controllers
             }
             return View("PlayerDashBoard");
         }
+        
+        public IActionResult Achievements()
+        {
+            if (HttpContext.Session.GetInt32("PlayerId") != null)
+            {
+                int playerId = 0;
+                if (HttpContext.Session.GetInt32("PlayerLevel") != null)
+                {
+                    playerId = (int)HttpContext.Session.GetInt32("PlayerId");
+                }
 
+                AchievementViewModel AVmodel = new AchievementViewModel();
+                AVmodel.Achievements = _playerLogic.GetPlayerAchievements(playerId);
 
+                return View(AVmodel);
+            }
+            // Else
+            TempData["LoginError"] = "You are not logged in. Please log in and try again";
+            return RedirectToAction("Login");
+        }
     }
 }

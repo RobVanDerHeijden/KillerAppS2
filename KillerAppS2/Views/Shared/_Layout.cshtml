@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - KillerAppS2</title>
+    <title>@ViewData["Title"] - Bunky Paradise</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -103,7 +103,7 @@
                         <p><i class="fas fa-street-view"></i> Experience: @Context.Session.GetString("Experience") / @Context.Session.GetString("ExperienceNeededForNextLevel")</p>
                         <div class="progress progress-bar-bunky">
                             <div class="progress-bar progress-bar-success level-progress-width" role="progressbar" aria-valuenow="0"
-                                 aria-valuemin="0" aria-valuemax="100" style="width:40%">
+                                 aria-valuemin="0" aria-valuemax="100" style="width:0%">
                                 x
                             </div>
                         </div>
@@ -118,7 +118,7 @@
                         <p class="button-energy-region" align="center"><a class="button-energy" asp-area="" asp-controller="Player" asp-action="RefillEnergy"><i class="fas fa-bolt"></i> Refill Energy</a></p>
                         <div class="progress progress-bar-bunky" id="energy-regen-bar">
                             <div class="progress-bar progress-bar-striped active fillable-energy-width" role="progressbar"
-                                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:40%">
+                                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
                                 x
                             </div>
                         </div>
@@ -134,14 +134,14 @@
                         <ul>
                             <li><a asp-area="" asp-controller="Player" asp-action="Hacks"><i class="fas fa-bug"></i> Hacks</a></li>
                             <li><a asp-area="" asp-controller="Player" asp-action="Skills"><i class="fas fa-brain"></i> Skills</a></li>
-                            <li><a asp-area="" asp-controller="Player" asp-action="MyGang"><i class="fas fa-users"></i> MyGang</a></li>
-                            <li><a asp-area="" asp-controller="Player" asp-action="Missions"><i class="fas fa-tasks"></i> Missions</a></li>
                             <li><a asp-area="" asp-controller="Player" asp-action="Achievements"><i class="fas fa-trophy"></i> Achievements</a></li>
+                            @*<li><a asp-area="" asp-controller="Player" asp-action="MyGang"><i class="fas fa-users"></i> MyGang</a></li>
+                            <li><a asp-area="" asp-controller="Player" asp-action="Missions"><i class="fas fa-tasks"></i> Missions</a></li>*@
                         </ul>
                     </div>
                 </div>
 
-                <div class="sidenav-block">
+                @*<div class="sidenav-block">
                     <div class="sidenav-block-header">
                         <h2><i class="fas fa-users"></i> Relations</h2>
                     </div>
@@ -152,7 +152,7 @@
                             <li><a asp-area="" asp-controller="Player" asp-action="Enemys"><i class="fas fa-book-dead"></i> Enemys</a></li>
                         </ul>
                     </div>
-                </div>
+                </div>*@
             </div>
             <div class="main-body">
                 @RenderBody()
@@ -163,7 +163,7 @@
             @RenderBody()
         }
         <footer>
-            <p>&copy; 2019 - KillerAppS2</p>
+            <p>&copy; 2019 - Bunky Paradise™</p>
         </footer>
     </div>
     

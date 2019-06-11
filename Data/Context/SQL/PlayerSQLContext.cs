@@ -721,6 +721,84 @@ namespace Data.Context.SQL
 
             return hasEnoughEnergy;
         }
+
+        public List<Achievement> GetPlayerAchievements(int playerId)
+        {
+            List<Achievement> playerAchievements = new List<Achievement>();
+            try
+            {
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("SELECT A.AchievementID, A.name AS AchievementName, A.description, PA.dateAchieved " +
+                                                           "FROM Achievement A " +
+                                                           "INNER JOIN PlayerAchievement PA ON PA.AchievementID = A.AchievementID " +
+                                                           "WHERE PA.PlayerId = @playerId " +
+                                                           "ORDER BY AchievementID", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@playerId", playerId);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Achievement achievement = new Achievement
+                                {
+                                    AchievementId = (int) reader["AchievementID"],
+                                    Name = (string)reader["AchievementName"],
+                                    Description = (string)reader["description"],
+                                    DateAchieved = (DateTime) reader["dateAchieved"]
+                                };
+                                playerAchievements.Add(achievement);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            return playerAchievements;
+        }
+
+        public void UpdatePlayerHackStats(int id, int playerId, bool isSucces)
+        {
+            try
+            {
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+                    if (isSucces)
+                    {
+                        // TODO: add moneygained
+                        using (SqlCommand cmd = new SqlCommand("UPDATE PlayerHack SET timesSucces = timesSucces + 1 WHERE PlayerID = @PlayerID AND HackID = @HackID", conn))
+                        {
+                            cmd.Parameters.AddWithValue("@HackID", id);
+                            cmd.Parameters.AddWithValue("@PlayerID", playerId);
+
+                            cmd.ExecuteNonQuery();
+                        }
+                    } else if (!isSucces)
+                    {
+                        using (SqlCommand cmd = new SqlCommand("UPDATE PlayerHack SET timesFailed = timesFailed + 1 WHERE PlayerID = @PlayerID AND HackID = @HackID", conn))
+                        {
+                            cmd.Parameters.AddWithValue("@HackID", id);
+                            cmd.Parameters.AddWithValue("@PlayerID", playerId);
+
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
     }
 }
  
