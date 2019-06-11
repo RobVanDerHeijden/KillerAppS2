@@ -55,7 +55,7 @@ namespace Data.Context
             return correctGang?.Players;
         }
 
-        // TODO: FIX THIS METHOD
+        
         public void AddPlayerToGang(int playerId, int gangId)
         {
             _players.Add(_players[playerId]);
@@ -75,29 +75,13 @@ namespace Data.Context
                     correctGang = currentGang;
                 }
             }
-            // TODO: Fix this stuff
-            //Player correctPlayerId = null;
-            //foreach (Player currentPlayer in correctGang.Players)
-            //{
-            //    if (currentPlayer.PlayerId == playerId)
-            //    {
-            //        correctPlayerId.PlayerId = currentPlayerId.PlayerId;
-            //    }
-            //}
-            //correctGang.Players.Remove()
         }
 
         public void RemovePlayerFromGang(int playerId)
         {
             throw new NotImplementedException();
         }
-
-        //// TODO: Kijk of ik deze in de Gang of Player wil
-        //public List<Player> GetPlayersWithoutGang()
-        //{
-        //    return _players;
-        //}
-
+        
         public Gang GetGangWithId(int id)
         {
             Gang correctGang = null;

@@ -42,16 +42,6 @@ namespace KillerAppS2.Controllers
                 if (player != null)
                 {
                     UpdatePlayerDisplayableInformation(player.PlayerId);
-                    //HttpContext.Session.SetInt32("PlayerId", player.PlayerId);
-                    //HttpContext.Session.SetString("Role", player.Role);
-                    //// Displayable information
-                    //HttpContext.Session.SetString("Username", player.Username);
-                    //HttpContext.Session.SetInt32("PlayerLevel", player.PlayerLevel);
-                    //HttpContext.Session.SetString("Experience", player.Experience.ToString());
-                    //HttpContext.Session.SetString("Money", player.Money.ToString());
-                    //HttpContext.Session.SetString("Income", player.Income.ToString());
-                    //HttpContext.Session.SetString("SkillPoints", player.SkillPoints.ToString());
-                    //HttpContext.Session.SetString("Energy", player.Energy.ToString());
                 }
             }
             else
@@ -123,13 +113,13 @@ namespace KillerAppS2.Controllers
             // check if succes (based on difficulty and skill in category)
             if (_playerLogic.IsHackSuccessful(id, playerId)) // TODO: Need to check if there is enough energy
             {
-                _playerLogic.GivePlayerReward(id, playerId);
                 //_playerLogic.ConsumeEnergy(id, playerId);
-                _playerLogic.UpdatePlayerLevels();
+                _playerLogic.GivePlayerReward(id, playerId);
                 //_playerLogic.UpdatePlayerHackStats(id, playerId);
+                _playerLogic.UpdatePlayerLevels();
 
                 UpdatePlayerDisplayableInformation(playerId);
-                TempData["HackCompleteNotice"] = "succes"; // TODO: Add the random number / what it needed to hit + Checkmark eg.: 74 / 15
+                TempData["HackCompleteNotice"] = "succes"; 
             }
             else
             {
@@ -181,7 +171,7 @@ namespace KillerAppS2.Controllers
             return RedirectToAction(actionName: "Skills", controllerName: "Player");
         }
 
-        // Helper Methods
+        // Helper Method
         public void UpdatePlayerDisplayableInformation(int playerId)
         {
             Player player = _playerLogic.GetPlayerWithId(playerId);
@@ -192,15 +182,37 @@ namespace KillerAppS2.Controllers
             HttpContext.Session.SetString("Username", player.Username);
             HttpContext.Session.SetInt32("PlayerLevel", player.PlayerLevel);
             HttpContext.Session.SetString("Experience", player.Experience.ToString());
+            HttpContext.Session.SetString("ExperienceNeededForNextLevel", player.ExperienceNeededForNextLevel.ToString());
             HttpContext.Session.SetString("Money", player.Money.ToString());
             HttpContext.Session.SetString("Income", player.Income.ToString());
             HttpContext.Session.SetString("SkillPoints", player.SkillPoints.ToString());
             HttpContext.Session.SetString("Energy", player.Energy.ToString());
+            HttpContext.Session.SetString("MaxEnergy", player.MaxEnergy.ToString());
+            HttpContext.Session.SetString("EnergyRegen", player.EnergyRegen.ToString());
+            HttpContext.Session.SetString("RefillableEnergy", player.RefillableEnergy.ToString());
         }
 
         public IActionResult RefillEnergy()
         {
+            int playerId = 0;
+            if (HttpContext.Session.GetInt32("PlayerId") != null)
+            {
+                playerId = (int)HttpContext.Session.GetInt32("PlayerId");
+            }
+
+            if (_playerLogic.UpdatePlayerEnergy(playerId))
+            {
+                _playerLogic.UpdatePlayerLevels();
+                UpdatePlayerDisplayableInformation(playerId);
+                TempData["EnergyCompleteNotice"] = "succes";
+            }
+            else
+            {
+                TempData["EnergyCompleteNotice"] = "failure";
+            }
             return View("PlayerDashBoard");
         }
+
+
     }
 }

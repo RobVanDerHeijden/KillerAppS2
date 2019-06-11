@@ -7,7 +7,15 @@
 }
 
 <h2>Player DashBoard</h2>
+@if ((string)TempData["EnergyCompleteNotice"] == "succes")
+{
+    <p class="notice-succes-status">Energy refilled! <i class="fas fa-check-circle"></i></p>
 
+}
+else if ((string)TempData["EnergyCompleteNotice"] == "failure")
+{
+    <p class="notice-failure-status">Energy not refilled <i class="fas fa-times-circle"></i></p>
+}
 <fieldset>
     <p>Welcome @Context.Session.GetString("Username")</p>
 </fieldset> 

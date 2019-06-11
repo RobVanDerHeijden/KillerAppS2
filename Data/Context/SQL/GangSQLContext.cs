@@ -78,7 +78,7 @@ namespace Data.Context.SQL
                                     Username = (string)gangMemberReader["username"],
                                     Password = (string)gangMemberReader["password"],
                                     PlayerLevel = (int)gangMemberReader["playerLevel"],
-                                    Experience = (decimal)gangMemberReader["experience"],
+                                    Experience = (int)gangMemberReader["experience"],
                                     SkillPoints = (int)gangMemberReader["skillPoints"],
                                     Money = (decimal)gangMemberReader["money"],
                                     Income = (decimal)gangMemberReader["income"],
@@ -101,13 +101,14 @@ namespace Data.Context.SQL
             }
         }
 
+        // TODO: FIX DEZE Methode als je gangs wilt gebruiken
         public void AddPlayerToGang(int playerId, int gangId)
         {
             try
             {
                 using (SqlConnection conn = _dbConnection.GetConnString())
                 {
-                    // TODO: FIX DEZE STUFF
+                    
                     using (SqlCommand cmd = new SqlCommand("INSERT INTO ", conn))
                     {
                         

@@ -44,15 +44,17 @@ namespace Data.Context.SQL
                                     Username = (string)reader["username"],
                                     Password = (string)reader["password"],
                                     PlayerLevel = (int)reader["playerLevel"],
-                                    Experience = (decimal)reader["experience"],
+                                    Experience = (int)reader["experience"],
                                     SkillPoints = (int)reader["skillPoints"],
                                     Money = (decimal)reader["money"],
                                     Income = (decimal)reader["income"],
                                     Energy = (int)reader["energy"],
+                                    MaxEnergy = (int)reader["maxEnergy"],
                                     RealName = reader["realName"]?.ToString(),
                                     Country = reader["country"]?.ToString(),
                                     City = reader["city"]?.ToString()
                                 };
+                                player.ExperienceNeededForNextLevel = (player.PlayerLevel * 5) ^ 2;
                                 playerList.Add(player);
                             }
                         }
@@ -88,15 +90,17 @@ namespace Data.Context.SQL
                                     Username = (string)reader["username"],
                                     Password = (string)reader["password"],
                                     PlayerLevel = (int)reader["playerLevel"],
-                                    Experience = (decimal)reader["experience"],
+                                    Experience = (int)reader["experience"],
                                     SkillPoints = (int)reader["skillPoints"],
                                     Money = (decimal)reader["money"],
                                     Income = (decimal)reader["income"],
                                     Energy = (int)reader["energy"],
+                                    MaxEnergy = (int)reader["maxEnergy"],
                                     RealName = reader["realName"]?.ToString(),
                                     Country = reader["country"]?.ToString(),
                                     City = reader["city"]?.ToString()
                                 };
+                                player.ExperienceNeededForNextLevel = (player.PlayerLevel * 5) ^ 2;
                                 playerList.Add(player);
                             }
                         }
@@ -153,16 +157,18 @@ namespace Data.Context.SQL
                                     Username = (string)reader["username"],
                                     Password = (string)reader["password"],
                                     PlayerLevel = (int)reader["playerLevel"],
-                                    Experience = (decimal)reader["experience"],
+                                    Experience = (int)reader["experience"],
                                     SkillPoints = (int)reader["skillPoints"],
                                     Money = (decimal)reader["money"],
                                     Income = (decimal)reader["income"],
                                     Energy = (int)reader["energy"],
+                                    MaxEnergy = (int)reader["maxEnergy"],
                                     RealName = reader["realName"]?.ToString(),
                                     Country = reader["country"]?.ToString(),
                                     City = reader["city"]?.ToString(),
                                     Role = reader["RoleName"].ToString()
                                 };
+                                player.ExperienceNeededForNextLevel = (player.PlayerLevel * 5) ^ 2;
                             }
                         }
                     }
@@ -336,6 +342,7 @@ namespace Data.Context.SQL
                 using (SqlConnection conn = _dbConnection.GetConnString())
                 {
                     conn.Open();
+                    // Maak hier Inner join van en zet letterlijke waarde in db, om zo de switch case weg te kunnen halen
                     using (SqlCommand cmd = new SqlCommand("SELECT RewardTypeID, reward FROM Hack WHERE HackID = @HackID",conn))
                     {
                         cmd.Parameters.AddWithValue("@HackID", hackId);
@@ -466,18 +473,51 @@ namespace Data.Context.SQL
                                     Username = (string) reader["username"],
                                     Password = (string) reader["password"],
                                     PlayerLevel = (int) reader["playerLevel"],
-                                    Experience = (decimal) reader["experience"],
+                                    Experience = (int) reader["experience"],
                                     SkillPoints = (int) reader["skillPoints"],
                                     Money = (decimal) reader["money"],
                                     Income = (decimal) reader["income"],
                                     Energy = (int) reader["energy"],
+                                    EnergyRegen = (int)reader["energyRegen"],
+                                    RefillableEnergy = (int)reader["refillableEnergy"],
+                                    LastTimeEnergyRefilled = (DateTime) reader["lastTimeEnergyRefilled"],
+                                    MaxEnergy = (int)reader["maxEnergy"],
                                     RealName = reader["realName"]?.ToString(),
                                     Country = reader["country"]?.ToString(),
                                     City = reader["city"]?.ToString(),
                                     Role = reader["RoleName"].ToString()
                                 };
+                                int nextLevel = player.PlayerLevel+1;
+                                player.ExperienceNeededForNextLevel = (int) Math.Pow((nextLevel * 5), 2);
+                                
                             }
+
                         }
+                    }
+
+                    // Set RefillableEnergy to correct value based on last check
+                    DateTime startTime = player.LastTimeEnergyRefilled;
+                    DateTime endTime = DateTime.Now;
+                    double timeDiffInMinutes = endTime.Subtract(startTime).TotalMinutes;
+
+                    if (timeDiffInMinutes > 5)
+                    {
+                        int newRefillableEnergy = player.RefillableEnergy + (int)Math.Floor((timeDiffInMinutes / 5)) * player.EnergyRegen;
+                        if (newRefillableEnergy > 100)
+                        {
+                            newRefillableEnergy = 100;
+                        }
+                        DateTime xMinsLater = startTime.AddMinutes((int)Math.Floor((timeDiffInMinutes / 5)) * 5);
+                        using (SqlCommand cmd = new SqlCommand("UPDATE Player Set refillableEnergy = @playerRefillableEnergy, lastTimeEnergyRefilled = @updatedLastTime WHERE PlayerID = @playerId", conn))
+                        {
+                            cmd.Parameters.AddWithValue("@playerId", playerId);
+                            cmd.Parameters.AddWithValue("@playerRefillableEnergy", newRefillableEnergy);
+                            cmd.Parameters.AddWithValue("@updatedLastTime", xMinsLater);
+
+                            cmd.ExecuteNonQuery();
+                        }
+                        player.RefillableEnergy = newRefillableEnergy;
+                        player.LastTimeEnergyRefilled = xMinsLater;
                     }
                 }
                 return player;
@@ -579,6 +619,34 @@ namespace Data.Context.SQL
                 Console.WriteLine(e);
                 throw;
             }
+        }
+
+        // playerid, refillableEnergy, new Energy
+        public int UpdatePlayerEnergy(int playerId, int playerRefillableEnergy, int energy)
+        {
+            int excessEnergy = 0;
+            try
+            {
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("UPDATE Player Set refillableEnergy = @playerRefillableEnergy, energy = @energy, lastTimeEnergyRefilled = getdate() WHERE PlayerID = @playerId", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@playerId", playerId);
+                        cmd.Parameters.AddWithValue("@playerRefillableEnergy", playerRefillableEnergy);
+                        cmd.Parameters.AddWithValue("@energy", energy);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            return excessEnergy;
         }
     }
 }

@@ -19,6 +19,32 @@
     </environment>
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <script>
+        
+        function checkVariable(){
+            if (window.jQuery){
+                $(document).ready(function () {
+                    var experience = @Context.Session.GetString("Experience");
+                    var experienceNeededForNextLevel = @Context.Session.GetString("ExperienceNeededForNextLevel");
+                    var levelProgressValue = Math.floor(experience / experienceNeededForNextLevel * 100) + '%';
+                    $(".level-progress-width").width(levelProgressValue);
+                    $('.level-progress-width').html(levelProgressValue);
+
+                    var refillableEnergy = @Context.Session.GetString("RefillableEnergy");
+                    var energyRegen = @Context.Session.GetString("EnergyRegen");
+                    $(".fillable-energy-width").width(refillableEnergy + '%');
+                    $('.fillable-energy-width').html(refillableEnergy);
+                    document.getElementById('energy-regen-bar').title = energyRegen + " energy per 5-Min";
+
+                });
+            }
+            else{
+                window.setTimeout("checkVariable();",100);
+            }
+        }
+        checkVariable();
+        
+    </script>
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -72,17 +98,25 @@
                     <div class="sidenav-block-content">
                         <p>Name: @Context.Session.GetString("Username")</p>
                         <p>Level: @Context.Session.GetInt32("PlayerLevel")</p>
-                        <p>Experience: @Context.Session.GetString("Experience")</p>
+                        <p>Experience: @Context.Session.GetString("Experience") / @Context.Session.GetString("ExperienceNeededForNextLevel")</p>
+                        <div class="progress progress-bar-bunky">
+                            <div class="progress-bar progress-bar-success level-progress-width" role="progressbar" aria-valuenow="0"
+                                 aria-valuemin="0" aria-valuemax="100" style="width:40%">
+                                x
+                            </div>
+                        </div>
                         <p>Money: @Context.Session.GetString("Money")</p>
                         <p>Income: @Context.Session.GetString("Income")</p>
                         <p id="skill-points-display">Skill Points: @Context.Session.GetString("SkillPoints")</p>
 
-                        <p>Energy: @Context.Session.GetString("Energy") / (maxenergy)</p>
-                        <div class="bunky-round-xlarge">
-                            <div class="bunky-container bunky-blue bunky-round-xlarge bunky-bar-energy" style="width:25%"></div>
+                        <p>Energy: @Context.Session.GetString("Energy") / @Context.Session.GetString("MaxEnergy")</p>
+                        <p class="button-energy-region" align="center"><a class="button-energy" asp-area="" asp-controller="Player" asp-action="RefillEnergy"><i class="fas fa-bolt"></i> Refill Energy</a></p>
+                        <div class="progress progress-bar-bunky" id="energy-regen-bar">
+                            <div class="progress-bar progress-bar-striped active fillable-energy-width" role="progressbar"
+                                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:40%">
+                                x
+                            </div>
                         </div>
-                        <p><a asp-area="" asp-controller="Player" asp-action="RefillEnergy"><i class="fas fa-bolt"></i>Refill Energy</a></p>
-
                     </div>
                 </div>
 

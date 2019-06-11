@@ -84,6 +84,32 @@ body {
     border-radius: 16px;
     height: 8px;
 }
+.progress-bar-bunky {
+    margin-bottom: inherit;
+}
+.button-energy {
+    display: inline-block;
+    padding: 1px 15px;
+    font-size: 13px;
+    cursor: pointer;
+    text-align: center;
+    color: #fff;
+    background-color: #4e4caf;
+    border-radius: 8px;
+    box-shadow: 0 5px #999;
+}
+.button-energy:hover {
+    background-color: #3531ee;
+    color: #fff;
+}
+.button-energy:active {
+    background-color: #3531ee;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+}
+p.button-energy-region {
+    margin-bottom: 10px;
+}
 
 /* Footer */
 footer {
@@ -102,4 +128,46 @@ body {
 }
 .notice-failure-status {
     color: chocolate;
+}
+
+
+/* Table for Lists */
+.table-list-style-bunky th {
+    color:#D5DDE5;;
+    background:#1b1e24;
+    border-bottom:4px solid #9ea7af;
+    font-size:23px;
+    font-weight: 100;
+    padding:24px;
+}
+.table-list-style-bunky th:first-child {
+    border-top-left-radius:5px;
+}
+.table-list-style-bunky th:last-child {
+    border-top-right-radius:5px;
+}
+.table-list-style-bunky tr td:first-child {
+    color:#000;
+}
+.table-list-style-bunky tr {
+    border-top: 1px solid #C1C3D1;
+    border-bottom: 1px solid #C1C3D1;
+    color:#666B85;
+}
+.table-list-style-bunky tr:hover td {
+    background:#4E5066;
+    color:#FFFFFF;
+    border-top: 1px solid #22262e;
+}
+.table-list-style-bunky tr:nth-child(odd) td {
+    background:#EBEBEB;
+}
+.table-list-style-bunky tr:nth-child(odd):hover td {
+    background:#4E5066;
+}
+.table-list-style-bunky td {
+    background:#FFFFFF;
+    padding:20px;
+    font-size:18px;
+    border-right: 1px solid #C1C3D1;
 }

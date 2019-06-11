@@ -66,7 +66,8 @@ namespace Logic
         // Return type is bool so I can set a appropriate message in Tempdata
         public bool UpgradeSkill(int skillId, int playerId)
         {
-            if (_iplayerContext.GetPlayerWithId(playerId).SkillPoints > 0 &&
+            Player player = _iplayerContext.GetPlayerWithId(playerId);
+            if (player.SkillPoints > 0 &&
                 _iplayerContext.GetPlayerSkillWithId(skillId, playerId).SkillPoints < _iplayerContext.GetPlayerSkillWithId(skillId, playerId).MaxSkillPoints)
             {
                 _iplayerContext.UpdatePlayerSkill(skillId, playerId);
@@ -78,7 +79,39 @@ namespace Logic
 
         public Player GetPlayerWithId(int playerId)
         {
-            return _iplayerContext.GetPlayerWithId(playerId);
+            Player player = _iplayerContext.GetPlayerWithId(playerId);
+
+            return player;
+        }
+
+        public bool UpdatePlayerEnergy(int playerId)
+        {
+            Player player = _iplayerContext.GetPlayerWithId(playerId);
+            DateTime startTime = player.LastTimeEnergyRefilled;
+            DateTime endTime = DateTime.Now;
+
+            double timeDiffInMinutes = endTime.Subtract(startTime).TotalMinutes;
+
+            player.RefillableEnergy += (int) Math.Floor((timeDiffInMinutes / 5)) * player.EnergyRegen;
+            if (player.RefillableEnergy > 0 && 
+                player.Energy < player.MaxEnergy)
+            {
+                int excessEnergy;
+                if (player.Energy + player.RefillableEnergy > player.MaxEnergy)
+                {
+                    excessEnergy = player.Energy + player.RefillableEnergy - player.MaxEnergy;
+                    _iplayerContext.UpdatePlayerEnergy(player.PlayerId, excessEnergy, player.MaxEnergy);
+                }
+                else
+                {
+                    excessEnergy = 0;
+                    _iplayerContext.UpdatePlayerEnergy(player.PlayerId, excessEnergy, player.Energy + player.RefillableEnergy);
+                }
+                
+
+                return true;
+            }
+            return false;
         }
     }
 }

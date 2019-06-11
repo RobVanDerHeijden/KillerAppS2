@@ -22,5 +22,6 @@ namespace Data.Interfaces
         Skill GetPlayerSkillWithId(int skillId, int playerId);
         void UpdatePlayerSkill(int skillId, int playerId);
         void LowerPlayerSkillPoints(int playerId);
+        int UpdatePlayerEnergy(int playerId, int playerRefillableEnergy, int energy);
     }
 }
