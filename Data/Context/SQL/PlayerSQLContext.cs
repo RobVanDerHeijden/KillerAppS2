@@ -648,6 +648,79 @@ namespace Data.Context.SQL
 
             return excessEnergy;
         }
+
+        public void ConsumeEnergy(int hackId, int playerId)
+        {
+            try
+            {
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+                    int energyToConsume;
+
+                    using (SqlCommand cmdEnergyCost = new SqlCommand("SELECT energyCost FROM Hack WHERE hackId = @hackId", conn))
+                    {
+                        cmdEnergyCost.Parameters.AddWithValue("@hackId", hackId);
+                        energyToConsume = (int)cmdEnergyCost.ExecuteScalar();
+                    }
+
+                    using (SqlCommand cmd = new SqlCommand("UPDATE Player SET energy = energy - @energyToConsume WHERE PlayerID = @playerId", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@energyToConsume", energyToConsume);
+                        cmd.Parameters.AddWithValue("@playerId", playerId);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public bool HasEnoughEnergy(int id, int playerId)
+        {
+            bool hasEnoughEnergy;
+            try
+            {
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+                    int energyToConsume;
+                    int playerEnergy;
+
+                    using (SqlCommand cmdEnergyCost = new SqlCommand("SELECT energyCost FROM Hack WHERE hackId = @hackId", conn))
+                    {
+                        cmdEnergyCost.Parameters.AddWithValue("@hackId", id);
+                        energyToConsume = (int)cmdEnergyCost.ExecuteScalar();
+                    }
+
+                    using (SqlCommand cmd = new SqlCommand("SELECT energy FROM Player WHERE PlayerID = @playerId", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@playerId", playerId);
+                        playerEnergy = (int)cmd.ExecuteScalar();
+                    }
+
+                    if (energyToConsume > playerEnergy)
+                    {
+                        hasEnoughEnergy = false;
+                    }
+                    else
+                    {
+                        hasEnoughEnergy = true;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            return hasEnoughEnergy;
+        }
     }
 }
  

@@ -23,5 +23,7 @@ namespace Data.Interfaces
         void UpdatePlayerSkill(int skillId, int playerId);
         void LowerPlayerSkillPoints(int playerId);
         int UpdatePlayerEnergy(int playerId, int playerRefillableEnergy, int energy);
+        void ConsumeEnergy(int hackId, int playerId);
+        bool HasEnoughEnergy(int id, int playerId);
     }
 }

@@ -111,20 +111,27 @@ namespace KillerAppS2.Controllers
                 playerId = (int)HttpContext.Session.GetInt32("PlayerId");
             }
             // check if succes (based on difficulty and skill in category)
-            if (_playerLogic.IsHackSuccessful(id, playerId)) // TODO: Need to check if there is enough energy
+            if (_playerLogic.HasEnoughEnergy(id, playerId))
             {
-                //_playerLogic.ConsumeEnergy(id, playerId);
-                _playerLogic.GivePlayerReward(id, playerId);
-                //_playerLogic.UpdatePlayerHackStats(id, playerId);
-                _playerLogic.UpdatePlayerLevels();
+                if (_playerLogic.IsHackSuccessful(id, playerId)) // TODO: Need to check if there is enough energy
+                {
+                    _playerLogic.GivePlayerReward(id, playerId);
+                    //_playerLogic.UpdatePlayerHackStats(id, playerId);
+                    _playerLogic.UpdatePlayerLevels();
 
-                UpdatePlayerDisplayableInformation(playerId);
-                TempData["HackCompleteNotice"] = "succes"; 
+                    UpdatePlayerDisplayableInformation(playerId);
+                    TempData["HackCompleteNotice"] = "succes";
+                }
+                else
+                {
+                    TempData["HackCompleteNotice"] = "failure";
+                }
             }
             else
             {
-                TempData["HackCompleteNotice"] = "failure";
+                TempData["HackCompleteNotice"] = "notEnoughEnergy";
             }
+            
 
             return RedirectToAction(actionName: "Hacks", controllerName: "Player");
         }
@@ -156,7 +163,7 @@ namespace KillerAppS2.Controllers
             {
                 playerId = (int)HttpContext.Session.GetInt32("PlayerId");
             }
-            // check if succes (based on difficulty and skill in category)
+            // check if succes (based on difficulty and skillpoints in category)
             if (_playerLogic.UpgradeSkill(id, playerId))
             {
                 TempData["SkillUpgradeNotice"] = "succes";
@@ -166,6 +173,8 @@ namespace KillerAppS2.Controllers
             else
             {
                 TempData["SkillUpgradeNotice"] = "failure";
+
+                UpdatePlayerDisplayableInformation(playerId);
             }
 
             return RedirectToAction(actionName: "Skills", controllerName: "Player");

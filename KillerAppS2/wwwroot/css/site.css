@@ -87,6 +87,12 @@ body {
 .progress-bar-bunky {
     margin-bottom: inherit;
 }
+hr.bunky-hr {
+    margin-top: 1px;
+    margin-bottom: 1px;
+    border: 0;
+    border-top: 2px solid #a70de8;
+}
 .button-energy {
     display: inline-block;
     padding: 1px 15px;

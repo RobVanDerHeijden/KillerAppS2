@@ -48,7 +48,7 @@ namespace Logic
         {
             if (_iplayerContext.PassedDifficultyCheck(hackId, playerId))
             {
-
+                _iplayerContext.ConsumeEnergy(hackId, playerId);
             }
             return _iplayerContext.PassedDifficultyCheck(hackId, playerId);
         }
@@ -112,6 +112,11 @@ namespace Logic
                 return true;
             }
             return false;
+        }
+
+        public bool HasEnoughEnergy(int id, int playerId)
+        {
+            return _iplayerContext.HasEnoughEnergy(id, playerId);
         }
     }
 }

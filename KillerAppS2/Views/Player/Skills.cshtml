@@ -12,25 +12,21 @@
 else if ((string)TempData["SkillUpgradeNotice"] == "failure")
 {
     <script>
-        function checkVariable(){
+        function checkSkillSucces(){
             if (window.jQuery){
                 $(document).ready(function () {
                     $("#skill-points-display").animate({
-                        marginLeft: "+=30px",
-                        fontSize: "16px"
+                        marginLeft: "+=10px",
+                        fontSize: "15px"
                     }, "slow");
                     $("#skill-points-display").fadeOut(600).fadeIn(600).fadeOut(600).fadeIn(600);
                     $("#skill-points-display").animate({
-                        marginLeft: "-=30px",
+                        marginLeft: "-=10px",
                         fontSize: "12px"
                     }, "slow");
                 });
             }
-            else{
-                window.setTimeout("checkVariable();",100);
-            }
         }
-        checkVariable();
     </script>
     <p class="notice-failure-status">Skill could not be upgraded! <i class="fas fa-times-circle"></i></p>
 }
