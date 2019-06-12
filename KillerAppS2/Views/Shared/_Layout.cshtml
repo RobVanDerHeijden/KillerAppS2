@@ -68,6 +68,7 @@
                     @if (Context.Session.GetString("Role") == "Admin")
                     {
                         <li><a asp-area="" asp-controller="Player" asp-action="PlayerAchievements">Player Achievements</a></li>
+                        <li><a asp-area="" asp-controller="Player" asp-action="PlayerLevels">Player Levels</a></li>
                         <li><a asp-area="" asp-controller="Gang" asp-action="Index">Gang</a></li>
                     }
                 </ul>

@@ -146,5 +146,10 @@ namespace Logic
         {
             return _iplayerContext.GetAllPlayersAchievements();
         }
+
+        public List<PlayerLevel> GetAllPlayersLevels()
+        {
+            return _iplayerContext.GetAllPlayersLevels();
+        }
     }
 }

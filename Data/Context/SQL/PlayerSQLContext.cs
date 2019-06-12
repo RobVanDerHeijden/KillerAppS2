@@ -892,6 +892,41 @@ namespace Data.Context.SQL
             }
             return playerAchievements;
         }
+
+        public List<PlayerLevel> GetAllPlayersLevels()
+        {
+            List<PlayerLevel> playersLevels = new List<PlayerLevel>();
+            try
+            {
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("SELECT playerLevel, COUNT(playerLevel) AS AmountPlayers " +
+                                                           "FROM Player " +
+                                                           "GROUP BY playerLevel", conn))
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                PlayerLevel playerLevel = new PlayerLevel
+                                {
+                                    Level = (int) reader["playerLevel"],
+                                    AmountPlayers = (int) reader["AmountPlayers"]
+                                };
+                                playersLevels.Add(playerLevel);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            return playersLevels;
+        }
     }
 }
  

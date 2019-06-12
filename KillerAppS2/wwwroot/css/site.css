@@ -154,6 +154,7 @@ body {
 }
 .table-list-style-bunky tr td:first-child {
     color:#000;
+    font-weight: bold;
 }
 .table-list-style-bunky tr {
     border-top: 1px solid #C1C3D1;

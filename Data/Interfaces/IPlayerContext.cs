@@ -30,5 +30,6 @@ namespace Data.Interfaces
         void UpdateSinglePlayerLevel(int playerId);
         void UpdatePlayerData(Player player);
         List<Achievement> GetAllPlayersAchievements();
+        List<PlayerLevel> GetAllPlayersLevels();
     }
 }

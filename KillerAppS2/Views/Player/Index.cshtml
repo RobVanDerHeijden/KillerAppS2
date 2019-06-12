@@ -9,12 +9,9 @@
 @*<p>
     <a asp-action="PlayersWithoutGang">Players Without Gang</a>
 </p>*@
-<table class="table">
+<table class="table table-list-style-bunky">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.PlayerId)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Username)
             </th>
@@ -32,9 +29,6 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => player.PlayerId)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => player.Username)
                 </td>
                 <td>
@@ -44,9 +38,7 @@
                     @Html.DisplayFor(modelItem => player.Experience)
                 </td>
                 <td>
-                    @Html.ActionLink("Details", "DetailsPlayer", new {  id=player.PlayerId }) @*|
-                    @Html.ActionLink("Add as Friend", "AddPlayerAsFriend", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Add as Enemy", "AddPlayerAsEnemy", new { /* id=item.PrimaryKey */ })*@
+                    @Html.ActionLink("Details", "DetailsPlayer", new {  id=player.PlayerId }) 
                 </td>
             </tr>
         }

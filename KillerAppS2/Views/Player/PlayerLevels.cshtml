@@ -1,0 +1,32 @@
+﻿@model PlayerLevelViewModel
+
+@{
+    ViewData["Title"] = "PlayerLevels";
+}
+
+<h2>PlayerLevels</h2>
+
+<table class="table table-list-style-bunky">
+    <thead>
+        <tr>
+            <th>
+                <i class="fas fa-signal"></i> @Html.DisplayNameFor(model => model.PlayerLevel.Level)
+            </th>
+            <th>
+                <i class="fas fa-user-friends"></i> @Html.DisplayNameFor(model => model.PlayerLevel.AmountPlayers)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.PlayerLevels) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Level)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AmountPlayers)
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

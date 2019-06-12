@@ -304,8 +304,6 @@ namespace KillerAppS2.Controllers
             return RedirectToAction("Index");
         }
 
-
-
         public IActionResult DetailsPlayer(int id)
         {
             if (HttpContext.Session.GetInt32("PlayerId") != null)
@@ -325,16 +323,25 @@ namespace KillerAppS2.Controllers
         {
             if (HttpContext.Session.GetInt32("PlayerId") != null)
             {
-                //int playerId = 0;
-                //if (HttpContext.Session.GetInt32("PlayerLevel") != null)
-                //{
-                //    playerId = (int)HttpContext.Session.GetInt32("PlayerId");
-                //}
-
                 AchievementViewModel AVmodel = new AchievementViewModel();
                 AVmodel.Achievements = _playerLogic.GetAllPlayersAchievements();
 
                 return View(AVmodel);
+            }
+
+            // Else
+            TempData["LoginError"] = "You are not logged in. Please log in and try again";
+            return RedirectToAction("Login");
+        }
+
+        public IActionResult PlayerLevels()
+        {
+            if (HttpContext.Session.GetInt32("PlayerId") != null)
+            {
+                PlayerLevelViewModel PLVmodel = new PlayerLevelViewModel();
+                PLVmodel.PlayerLevels = _playerLogic.GetAllPlayersLevels();
+                
+                return View(PLVmodel);
             }
 
             // Else
