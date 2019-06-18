@@ -56,7 +56,7 @@ else if ((string)TempData["SkillUpgradeNotice"] == "failure")
                     @Html.DisplayFor(modelItem => item.SkillPoints) / @Html.DisplayFor(modelItem => item.MaxSkillPoints)
                 </td>
                 <td>
-                    <label title="Category mastered: @*Html.DisplayFor(modelItem => item.MaxSkillPoints)*@">@Html.DisplayFor(modelItem => item.SkillCategoryName)</label>
+                    <label title="Category mastered: @Html.DisplayFor(modelItem => item.MaxSkillPoints)">@Html.DisplayFor(modelItem => item.SkillCategoryName)</label>
                 </td>
                 <td>
                     @Html.ActionLink("Upgrade", "UpgradeSkill", new { id = item.SkillId })

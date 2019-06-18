@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Data.Interfaces;
 using KillerAppS2.Models;
 using Logic;
 using Microsoft.AspNetCore.Http;
@@ -12,8 +13,12 @@ namespace KillerAppS2.Controllers
 {
     public class PlayerController : Controller
     {
+        private PlayerLogic _playerLogic;
 
-        private readonly PlayerLogic _playerLogic = new PlayerLogic();
+        public PlayerController(IPlayerContext playerContext)
+        {
+            _playerLogic = new PlayerLogic(playerContext);
+        }
 
         public ActionResult Index()
         {
@@ -54,18 +59,6 @@ namespace KillerAppS2.Controllers
 
             return RedirectToAction("PlayerDashBoard");
         }
-
-        //public ActionResult PlayerDashBoard()
-        //{
-        //    if (HttpContext.Session.GetInt32("PlayerId") != null)
-        //    {
-        //        return View();
-        //    }
-
-        //    // Else
-        //    TempData["LoginError"] = "You are not logged in. Please log in and try again";
-        //    return RedirectToAction("Login");
-        //}
 
         public IActionResult Logout()
         {
@@ -125,7 +118,6 @@ namespace KillerAppS2.Controllers
                     _playerLogic.GivePlayerReward(id, playerId);
                     _playerLogic.UpdatePlayerHackStats(id, playerId, true);
                     _playerLogic.UpdateSinglePlayerLevel(playerId);
-                    //_playerLogic.UpdatePlayerLevels();
 
                     UpdatePlayerDisplayableInformation(playerId);
                     TempData["HackCompleteNotice"] = "succes";
@@ -141,7 +133,6 @@ namespace KillerAppS2.Controllers
             {
                 TempData["HackCompleteNotice"] = "notEnoughEnergy";
             }
-
 
             return RedirectToAction(actionName: "Hacks", controllerName: "Player");
         }
@@ -203,8 +194,7 @@ namespace KillerAppS2.Controllers
             HttpContext.Session.SetString("Username", player.Username);
             HttpContext.Session.SetInt32("PlayerLevel", player.PlayerLevel);
             HttpContext.Session.SetString("Experience", player.Experience.ToString());
-            HttpContext.Session.SetString("ExperienceNeededForNextLevel",
-                player.ExperienceNeededForNextLevel.ToString());
+            HttpContext.Session.SetString("ExperienceNeededForNextLevel", player.ExperienceNeededForNextLevel.ToString());
             HttpContext.Session.SetString("Money", player.Money.ToString());
             HttpContext.Session.SetString("Income", player.Income.ToString());
             HttpContext.Session.SetString("SkillPoints", player.SkillPoints.ToString());
@@ -223,8 +213,7 @@ namespace KillerAppS2.Controllers
             }
 
             if (_playerLogic.UpdatePlayerEnergy(playerId))
-            {
-                //_playerLogic.UpdatePlayerLevels();
+            {   
                 _playerLogic.UpdateSinglePlayerLevel(playerId);
                 UpdatePlayerDisplayableInformation(playerId);
                 TempData["EnergyCompleteNotice"] = "succes";

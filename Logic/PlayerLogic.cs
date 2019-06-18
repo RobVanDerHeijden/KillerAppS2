@@ -10,14 +10,11 @@ namespace Logic
 {
     public class PlayerLogic
     {
-        //private static PlayerRepository PlayerRepo = new PlayerRepository();
-        private readonly IPlayerContext _iplayerContext = new PlayerSqlContext();
-        
-        //private readonly IPlayerContext _iplayerContext;
-        //public PlayerLogic(IPlayerContext iplayerContext)
-        //{
-        //    _iplayerContext = iplayerContext;
-        //}
+        private IPlayerContext _iplayerContext;
+        public PlayerLogic(IPlayerContext playerContext)
+        {
+            _iplayerContext = playerContext;
+        }
 
         public List<Player> GetPlayers()
         {
@@ -37,11 +34,6 @@ namespace Logic
         public List<Hack> GetAvailableHacks(int id)
         {
             return _iplayerContext.GetAvailableHacks(id);
-        }
-
-        public void UpdatePlayerLevels()
-        {
-            _iplayerContext.UpdatePlayerLevels();
         }
 
         public bool IsHackSuccessful(int hackId, int playerId)
@@ -133,7 +125,7 @@ namespace Logic
 
         public void UpdateSinglePlayerLevel(int playerId)
         {
-            Player player = _iplayerContext.GetPlayerWithId(playerId);
+            _iplayerContext.GetPlayerWithId(playerId);
             _iplayerContext.UpdateSinglePlayerLevel(playerId);
         }
 

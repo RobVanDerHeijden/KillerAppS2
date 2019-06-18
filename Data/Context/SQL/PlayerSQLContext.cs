@@ -14,15 +14,7 @@ namespace Data.Context.SQL
         // TODO: Remove all throws in the catches
         // TODO: Rewrite catch exeption message to be less technical and more user friendly
         private readonly DBConnection _dbConnection = new DBConnection();
-
-        //public PlayerSqlContext(IPlayerContext config)
-        //{
-        //    var myStringValue = config["MyStringKey"];
-
-        //    // Use myStringValue
-        //}
-
-
+        
         public List<Player> GetPlayers()
         {
             try

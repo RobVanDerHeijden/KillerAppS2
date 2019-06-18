@@ -31,7 +31,7 @@ else if ((string)TempData["EnergyCompleteNotice"] == "failure")
             </div>
             <div class="form-group">
                 <label asp-for="Player.Password" class="control-label"></label>
-                <input asp-for="Player.Password" class="form-control" />
+                <input asp-for="Player.Password" class="form-control" type="password" required=""/>
                 <span asp-validation-for="Player.Password" class="text-danger"></span>
             </div>
             <div class="form-group">
