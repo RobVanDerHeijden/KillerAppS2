@@ -337,5 +337,32 @@ namespace KillerAppS2.Controllers
             TempData["LoginError"] = "You are not logged in. Please log in and try again";
             return RedirectToAction("Login");
         }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Register(IFormCollection form)
+        {
+            Player player = new Player
+            {
+                Username = form["Username"],
+                Password = form["Password"],
+                RealName = form["RealName"],
+                Country = form["Country"],
+                City = form["City"]
+            };
+            if (!_playerLogic.IsUsernameTaken(player.Username))
+            {
+                _playerLogic.RegisterUser(player);
+                return View("Login");
+            }
+            // Else
+            TempData["RegisterNotice"] = "taken";
+            return View();
+        }
     }
 }

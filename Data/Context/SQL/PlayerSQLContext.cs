@@ -107,20 +107,6 @@ namespace Data.Context.SQL
             }
         }
         
-        public void UpdatePlayer(Player player)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void RemovePlayer(int id)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void CreatePlayer(Player player)
-        {
-            throw new System.NotImplementedException();
-        }
 
         // Checks if login credentials are valid -> Returns PlayerModel || Parameters username, password
         public Player Login(string username, string password)
@@ -761,7 +747,6 @@ namespace Data.Context.SQL
                     conn.Open();
                     if (isSucces)
                     {
-                        // TODO: add moneygained stat
                         using (SqlCommand cmd = new SqlCommand("UPDATE PlayerHack SET timesSucces = timesSucces + 1 WHERE PlayerID = @PlayerID AND HackID = @HackID", conn))
                         {
                             cmd.Parameters.AddWithValue("@HackID", id);
@@ -918,6 +903,62 @@ namespace Data.Context.SQL
                 throw;
             }
             return playersLevels;
+        }
+
+        public bool IsUsernameTaken(string playerUsername)
+        {
+            try
+            {
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("SELECT * " +
+                                                           "FROM Player " +
+                                                           "WHERE username = @Username", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Username", playerUsername);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            return false;
+        }
+
+        public void RegisterUser(Player player)
+        {
+            try
+            {
+                using (SqlConnection conn = _dbConnection.GetConnString())
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("INSERT INTO Player (username, password, realName, country, city) " +
+                                                           "VALUES(@Username, @Password, @RealName, @Country, @City); ", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Username", player.Username);
+                        cmd.Parameters.AddWithValue("@Password", player.Password);
+                        cmd.Parameters.AddWithValue("@RealName", player.RealName);
+                        cmd.Parameters.AddWithValue("@Country", player.Country);
+                        cmd.Parameters.AddWithValue("@City", player.City);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }

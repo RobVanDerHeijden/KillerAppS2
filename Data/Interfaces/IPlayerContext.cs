@@ -26,5 +26,7 @@ namespace Data.Interfaces
         void UpdatePlayerData(Player player);
         List<Achievement> GetAllPlayersAchievements();
         List<PlayerLevel> GetAllPlayersLevels();
+        bool IsUsernameTaken(string playerUsername);
+        void RegisterUser(Player player);
     }
 }

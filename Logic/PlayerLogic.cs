@@ -143,5 +143,15 @@ namespace Logic
         {
             return _iplayerContext.GetAllPlayersLevels();
         }
+
+        public bool IsUsernameTaken(string playerUsername)
+        {
+            return _iplayerContext.IsUsernameTaken(playerUsername);
+        }
+
+        public void RegisterUser(Player player)
+        {
+            _iplayerContext.RegisterUser(player);
+        }
     }
 }
