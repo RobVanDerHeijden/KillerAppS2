@@ -178,3 +178,10 @@ body {
     font-size:18px;
     border-right: 1px solid #C1C3D1;
 }
+/* Carosel */
+.bunky-carosel {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 600px !important;
+}
