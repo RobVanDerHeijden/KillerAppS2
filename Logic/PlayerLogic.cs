@@ -10,7 +10,7 @@ namespace Logic
 {
     public class PlayerLogic
     {
-        private IPlayerContext _iplayerContext;
+        private readonly IPlayerContext _iplayerContext;
         public PlayerLogic(IPlayerContext playerContext)
         {
             _iplayerContext = playerContext;

@@ -13,6 +13,7 @@
         public int RewardTypeId { get; set; }
         public string RewardName { get; set; }
         public string SkillCategoryName { get; set; }
+        public int MinimalLevel { get; set; }
 
         public Hack()
         {

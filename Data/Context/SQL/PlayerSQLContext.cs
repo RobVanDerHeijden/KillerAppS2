@@ -11,8 +11,6 @@ namespace Data.Context.SQL
 {
     public class PlayerSqlContext : IPlayerContext
     {
-        // TODO: Remove all throws in the catches
-        // TODO: Rewrite catch exeption message to be less technical and more user friendly
         private readonly DBConnection _dbConnection = new DBConnection();
         
         public List<Player> GetPlayers()

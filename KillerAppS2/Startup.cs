@@ -37,6 +37,7 @@ namespace KillerAppS2
             //services.AddTransient<IPlayerContext, PlayerSqlContext>(); // Always Different: new instance
             //services.AddSingleton<IPlayerContext, PlayerSqlContext>(); // Same with same request
             services.AddScoped<IPlayerContext, PlayerSqlContext>(); // Same for every object and every request
+            //services.AddScoped<IPlayerContext, PlayerMemoryConext>(); // Same for every object and every request
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
