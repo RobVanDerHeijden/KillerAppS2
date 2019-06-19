@@ -301,7 +301,15 @@ namespace Data.Context
 
         public bool IsUsernameTaken(string playerUsername)
         {
-            throw new NotImplementedException();
+            Player player = _players.First(e => e.Username == playerUsername);
+            if (player != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public void RegisterUser(Player player)

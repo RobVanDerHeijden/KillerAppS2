@@ -50,8 +50,6 @@ namespace TestKillerApp
         //}
 
         // Persoonlijke gegevens veranderen
-        // Is skill al gemaxed
-        // Skill Point uitgeven
         // Level Omhoog bij genoeg exp
         // Hack uitvoeren
         // Achievement
@@ -83,6 +81,7 @@ namespace TestKillerApp
             Assert.AreEqual(hacks.Count, 1, "Hacks don't match!");
             //CollectionAssert.Contains(hacks, expectedHack, "Lists of Hacks don't match!");
         }
+        // Heeft Player genoeg energy voor geselecteerde hack
         [TestMethod]
         public void HasEnoughEnergyForHack_PlayerHasEnoughEnergy_HasEnoughEnergy()
         {
@@ -95,6 +94,8 @@ namespace TestKillerApp
             Assert.IsTrue(hasEnoughEnergy, "Not enough energy!");
         }
         // Heeft speler genoeg skillpunten om skill up te graden
+        // Is skill al gemaxed
+        // Skill Point uitgeven
         [TestMethod]
         public void UpgradeSkill_PlayerHasEnoughSKillPoints_HasEnoughSkillPointsForUpgrade()
         {
@@ -105,6 +106,18 @@ namespace TestKillerApp
 
             // Assert
             Assert.IsTrue(hasEnoughSkillPoints, "Not enough skill points!");
+        }
+        // IsUsernameTaken
+        [TestMethod]
+        public void IsUsernameTaken_UsernameIsNotTaken_NewUsername()
+        {
+            // Arrange
+
+            // Act
+            bool isUsernameTaken = _playerLogic.IsUsernameTaken("UnitPLayer2");
+
+            // Assert
+            Assert.IsTrue(isUsernameTaken, "Username is taken!");
         }
     }
 }
