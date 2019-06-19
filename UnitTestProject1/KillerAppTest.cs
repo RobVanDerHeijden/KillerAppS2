@@ -44,17 +44,15 @@ namespace TestKillerApp
 
         }
 
-        [TestMethod]
-        public void TestMethod1()
-        {
-        }
+        //[TestMethod]
+        //public void TestMethod1()
+        //{
+        //}
 
         // Persoonlijke gegevens veranderen
-        // Heeft speler genoeg skillpunten om skill up te graden
         // Is skill al gemaxed
         // Skill Point uitgeven
         // Level Omhoog bij genoeg exp
-        // Heeft speler genoeg energy voor hack
         // Hack uitvoeren
         // Achievement
 
@@ -74,7 +72,7 @@ namespace TestKillerApp
         }
         // Haal lijst op met Hacks op basis van PlayerLevel
         [TestMethod]
-        public void GetListHacks_MinimalLevelIsGoodEnough_ListHacksCOmesBack()
+        public void GetListHacks_MinimalLevelIsGoodEnough_ListHacksComesBack()
         {
             // Arrange
 
@@ -85,6 +83,28 @@ namespace TestKillerApp
             Assert.AreEqual(hacks.Count, 1, "Hacks don't match!");
             //CollectionAssert.Contains(hacks, expectedHack, "Lists of Hacks don't match!");
         }
+        [TestMethod]
+        public void HasEnoughEnergyForHack_PlayerHasEnoughEnergy_HasEnoughEnergy()
+        {
+            // Arrange
 
+            // Act
+            bool hasEnoughEnergy = _playerLogic.HasEnoughEnergy(1, _player.PlayerId);
+
+            // Assert
+            Assert.IsTrue(hasEnoughEnergy, "Not enough energy!");
+        }
+        // Heeft speler genoeg skillpunten om skill up te graden
+        [TestMethod]
+        public void UpgradeSkill_PlayerHasEnoughSKillPoints_HasEnoughSkillPointsForUpgrade()
+        {
+            // Arrange
+
+            // Act
+            bool hasEnoughSkillPoints = _playerLogic.UpgradeSkill(3, _player.PlayerId);
+
+            // Assert
+            Assert.IsTrue(hasEnoughSkillPoints, "Not enough skill points!");
+        }
     }
 }

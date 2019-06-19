@@ -122,6 +122,64 @@ namespace Data.Context
             }
         };
 
+        private List<Skill> _skills = new List<Skill>()
+        {
+            new Skill()
+            {
+                SkillId = 3,
+                Name = "Draft DB-Diagram",
+                Description = "Set up a Database diagram to better understand its structure",
+                SkillPoints = 2,
+                MaxSkillPoints = 10,
+                SkillCategoryName = "Database"
+            },
+            new Skill()
+            {
+                SkillId = 4,
+                Name = "SQL Query building",
+                Description = "Learn how to write different SQL queries",
+                SkillPoints = 0,
+                MaxSkillPoints = 10,
+                SkillCategoryName = "Database"
+            },
+            new Skill()
+            {
+                SkillId = 5,
+                Name = "PHP Server management",
+                Description = "Learn how PHP sites work on servers",
+                SkillPoints = 3,
+                MaxSkillPoints = 10,
+                SkillCategoryName = "Servers"
+            },
+            new Skill()
+            {
+                SkillId = 6,
+                Name = "ASP Server management",
+                Description = "Learn how ASP sites work on servers",
+                SkillPoints = 0,
+                MaxSkillPoints = 10,
+                SkillCategoryName = "Servers"
+            },
+            new Skill()
+            {
+                SkillId = 7,
+                Name = "Programmer Lingo Knowledge",
+                Description = "Knowledge about different words in the programming world to learn faster",
+                SkillPoints = 5,
+                MaxSkillPoints = 10,
+                SkillCategoryName = "Study"
+            },
+            new Skill()
+            {
+                SkillId = 8,
+                Name = "Sleep schedule",
+                Description = "Studying is easier when you are awake",
+                SkillPoints = 4,
+                MaxSkillPoints = 10,
+                SkillCategoryName = "Study"
+            }
+        };
+
         public List<Player> GetPlayers()
         {
             return _players;
@@ -135,7 +193,8 @@ namespace Data.Context
 
         public Player GetPlayerWithId(int id)
         {
-            throw new NotImplementedException();
+            Player player = _players.First(e => e.PlayerId == id);
+            return player;
         }
 
         public Player Login(string username, string password)
@@ -174,17 +233,22 @@ namespace Data.Context
 
         public Skill GetPlayerSkillWithId(int skillId, int playerId)
         {
-            throw new NotImplementedException();
+            Skill skill = _skills.First(e => e.SkillId == skillId);
+            return skill;
         }
 
         public void UpdatePlayerSkill(int skillId, int playerId)
         {
-            throw new NotImplementedException();
+            Skill skill = _skills.FirstOrDefault(e => e.SkillId == skillId);
+
+            if (skill != null) skill.SkillPoints++;
         }
 
         public void LowerPlayerSkillPoints(int playerId)
         {
-            throw new NotImplementedException();
+            Player player = _players.FirstOrDefault(e => e.PlayerId == playerId);
+
+            if (player != null) player.SkillPoints--;
         }
 
         public int UpdatePlayerEnergy(int playerId, int playerRefillableEnergy, int energy)
@@ -199,7 +263,10 @@ namespace Data.Context
 
         public bool HasEnoughEnergy(int id, int playerId)
         {
-            throw new NotImplementedException();
+            int energyCost = _hacks.First(e => e.HackId == id).EnergyCost;
+            int playerEnergy = _players.First(e => e.PlayerId == playerId).Energy;
+            bool hasEnoughEnergy = energyCost <= playerEnergy;
+            return hasEnoughEnergy;
         }
 
         public List<Achievement> GetPlayerAchievements(int playerId)
