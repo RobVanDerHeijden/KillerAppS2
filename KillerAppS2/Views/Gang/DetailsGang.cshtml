@@ -92,8 +92,6 @@
                     @Html.DisplayFor(modelItem => player.Experience)
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "EditPlayerGangRole", new { id = player.PlayerId }) |
-                    @Html.ActionLink("Details", "DetailsPlayer", new { id = player.PlayerId }) |
                     @Html.ActionLink("Remove", "RemovePlayerFromGang", new { id = player.PlayerId })
                 </td>
             </tr>

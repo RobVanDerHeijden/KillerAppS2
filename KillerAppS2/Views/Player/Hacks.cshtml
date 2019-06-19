@@ -91,8 +91,7 @@ else if ((string)TempData["HackCompleteNotice"] == "notEnoughEnergy")
                     @Html.DisplayFor(modelItem => item.Reward)
                 </td>
                 <td>
-                    @Html.ActionLink("Do", "DoHack", new { id = item.HackId }) |
-                    @*@Html.ActionLink("Stats", "StatsHack", new { id = item.HackId })*@
+                    @Html.ActionLink("Do", "DoHack", new { id = item.HackId }) 
                 </td>
             </tr>
         }

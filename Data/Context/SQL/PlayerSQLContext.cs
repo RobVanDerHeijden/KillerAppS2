@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
+using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 using Data.Interfaces;
 using Model;
@@ -15,9 +16,10 @@ namespace Data.Context.SQL
         
         public List<Player> GetPlayers()
         {
+            List<Player> playerList = new List<Player>();
             try
             {
-                List<Player> playerList = new List<Player>();
+                
                 using (SqlConnection conn = _dbConnection.GetConnString())
                 {
                     conn.Open();
@@ -50,24 +52,23 @@ namespace Data.Context.SQL
                         }
                     }
                 }
-                return playerList;
+                
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
+            return playerList;
         }
 
         public List<Player> GetPlayersWithoutGang()
         {
+            List<Player> playerList = new List<Player>();
             try
             {
-                List<Player> playerList = new List<Player>();
                 using (SqlConnection conn = _dbConnection.GetConnString())
                 {
                     conn.Open();
-                    // TODO: onderzoek hoe EXISTS werkt en of het beter/efficienter is
                     using (SqlCommand cmd = new SqlCommand("SELECT * FROM Player WHERE PlayerID NOT IN (SELECT PlayerId FROM GangMember)", conn))
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
@@ -96,22 +97,21 @@ namespace Data.Context.SQL
                         }
                     }
                 }
-                return playerList;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
+            return playerList;
         }
         
 
         // Checks if login credentials are valid -> Returns PlayerModel || Parameters username, password
         public Player Login(string username, string password)
         {
+            Player player = null;
             try
             {
-                Player player = null;
                 using (SqlConnection conn = _dbConnection.GetConnString())
                 {
                     conn.Open();
@@ -149,21 +149,20 @@ namespace Data.Context.SQL
                         }
                     }
                 }
-                return player;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
+            return player;
         }
 
         // Returns List of Hacks available for player based on his level || Parameter id = playerLevel
         public List<Hack> GetAvailableHacks(int minimalLevel)
         {
+            List<Hack> hacks = new List<Hack>();
             try
             {
-                List<Hack> hacks = new List<Hack>();
                 using (SqlConnection conn = _dbConnection.GetConnString())
                 {
                     conn.Open();
@@ -198,13 +197,12 @@ namespace Data.Context.SQL
                         }
                     }
                 }
-                return hacks;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
+            return hacks;
         }
 
         // STORED PROCEDURE: dbo.calcLevel
@@ -232,8 +230,7 @@ namespace Data.Context.SQL
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
         }
 
@@ -297,8 +294,7 @@ namespace Data.Context.SQL
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
 
             double categoryCompletionRatio = totalSkillPointsInCategory / maxSkillPointsInCategory;
@@ -318,7 +314,7 @@ namespace Data.Context.SQL
                 using (SqlConnection conn = _dbConnection.GetConnString())
                 {
                     conn.Open();
-                    // Maak hier Inner join van en zet letterlijke waarde in db, om zo de switch case weg te kunnen halen
+                    // Kijk voor oplossing om switch case weg te kunnen halen
                     using (SqlCommand cmd = new SqlCommand("SELECT RewardTypeID, reward FROM Hack WHERE HackID = @HackID",conn))
                     {
                         cmd.Parameters.AddWithValue("@HackID", hackId);
@@ -378,8 +374,7 @@ namespace Data.Context.SQL
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
         }
 
@@ -419,16 +414,15 @@ namespace Data.Context.SQL
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
             return playerSkills;
         }
         public Player GetPlayerWithId(int playerId)
         {
+            Player player = new Player();
             try
             {
-                Player player = new Player();
                 using (SqlConnection conn = _dbConnection.GetConnString())
                 {
                     conn.Open();
@@ -494,20 +488,19 @@ namespace Data.Context.SQL
                         player.LastTimeEnergyRefilled = xMinsLater;
                     }
                 }
-                return player;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
+            return player;
         }
 
         public Skill GetPlayerSkillWithId(int skillId, int playerId)
         {
+            Skill skill = new Skill();
             try
             {
-                Skill skill = new Skill();
                 using (SqlConnection conn = _dbConnection.GetConnString())
                 {
                     conn.Open();
@@ -537,13 +530,13 @@ namespace Data.Context.SQL
                         }
                     }
                 }
-                return skill;
+                
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
+            return skill;
         }
 
         public void UpdatePlayerSkill(int skillId, int playerId)
@@ -564,8 +557,7 @@ namespace Data.Context.SQL
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
         }
 
@@ -590,8 +582,7 @@ namespace Data.Context.SQL
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
         }
 
@@ -616,8 +607,7 @@ namespace Data.Context.SQL
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
 
             return excessEnergy;
@@ -649,14 +639,13 @@ namespace Data.Context.SQL
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
         }
 
         public bool HasEnoughEnergy(int id, int playerId)
         {
-            bool hasEnoughEnergy;
+            bool hasEnoughEnergy = false;
             try
             {
                 using (SqlConnection conn = _dbConnection.GetConnString())
@@ -689,8 +678,7 @@ namespace Data.Context.SQL
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
 
             return hasEnoughEnergy;
@@ -730,8 +718,7 @@ namespace Data.Context.SQL
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
             return playerAchievements;
         }
@@ -766,8 +753,7 @@ namespace Data.Context.SQL
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
         }
 
@@ -796,8 +782,7 @@ namespace Data.Context.SQL
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
         }
 
@@ -825,8 +810,7 @@ namespace Data.Context.SQL
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
         }
 
@@ -862,8 +846,7 @@ namespace Data.Context.SQL
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
             return playerAchievements;
         }
@@ -897,8 +880,7 @@ namespace Data.Context.SQL
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
             return playersLevels;
         }
@@ -927,8 +909,7 @@ namespace Data.Context.SQL
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
             return false;
         }
@@ -954,8 +935,7 @@ namespace Data.Context.SQL
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.WriteLine(e);
             }
         }
     }

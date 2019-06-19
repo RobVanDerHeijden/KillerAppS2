@@ -10,7 +10,6 @@ namespace Data.Interfaces
         Player GetPlayerWithId(int id);
         Player Login(string username, string password);
         List<Hack> GetAvailableHacks(int id);
-        void UpdatePlayerLevels();
         bool PassedDifficultyCheck(int hackId, int playerId);
         void GivePlayerReward(int id, int playerId);
         List<Skill> GetPlayerSkills(int playerId);

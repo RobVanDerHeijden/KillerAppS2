@@ -15,7 +15,6 @@ namespace TestKillerApp
         private PlayerLogic _playerLogic;
         private Player _player;
         
-
         [TestInitialize]
         public void TestInitialize()
         {
@@ -40,21 +39,8 @@ namespace TestKillerApp
                 Country = "Netherlands",
                 City = "Eindhoven"
             };
-            
-
         }
-
-        //[TestMethod]
-        //public void TestMethod1()
-        //{
-        //}
-
-        // Persoonlijke gegevens veranderen
-        // Level Omhoog bij genoeg exp
-        // Hack uitvoeren
-        // Achievement
-
-
+        
         /* Integration Testing */
         // Login
         [TestMethod]
