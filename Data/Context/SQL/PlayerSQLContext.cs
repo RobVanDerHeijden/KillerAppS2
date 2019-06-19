@@ -23,7 +23,6 @@ namespace Data.Context.SQL
                 using (SqlConnection conn = _dbConnection.GetConnString())
                 {
                     conn.Open();
-                    // TODO: onderzoek hoe EXISTS werkt en of het beter/efficienter is
                     using (SqlCommand cmd = new SqlCommand("SELECT * FROM Player", conn))
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())

@@ -112,7 +112,7 @@ namespace KillerAppS2.Controllers
 
             if (_playerLogic.HasEnoughEnergy(id, playerId))
             {
-                // check if hack is succes (based on difficulty and skill in category)
+                // check if hack is success (based on difficulty and skill in category)
                 if (_playerLogic.IsHackSuccessful(id, playerId))
                 {
                     _playerLogic.GivePlayerReward(id, playerId);
@@ -166,7 +166,7 @@ namespace KillerAppS2.Controllers
                 playerId = (int) HttpContext.Session.GetInt32("PlayerId");
             }
 
-            // check if succes (based on difficulty and skillpoints in category)
+            // check if success (based on difficulty and skillpoints in category)
             if (_playerLogic.UpgradeSkill(id, playerId))
             {
                 TempData["SkillUpgradeNotice"] = "succes";

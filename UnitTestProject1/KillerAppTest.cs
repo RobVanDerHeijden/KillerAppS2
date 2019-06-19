@@ -65,7 +65,6 @@ namespace TestKillerApp
 
             // Assert
             Assert.AreEqual(hacks.Count, 1, "Hacks don't match!");
-            //CollectionAssert.Contains(hacks, expectedHack, "Lists of Hacks don't match!");
         }
         // Heeft Player genoeg energy voor geselecteerde hack
         [TestMethod]
